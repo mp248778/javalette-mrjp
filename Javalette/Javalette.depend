@@ -1,0 +1,54 @@
+# depslib dependency file v1.0
+1240568352 source:/home/frea/mrjp/BNFC/doc/examples/runtime.c
+	<stdio.h>
+
+1240557150 source:/home/frea/mrjp/Printer.C
+	<string>
+	"Printer.H"
+
+1240557150 /home/frea/mrjp/include/Printer.H
+	"Absyn.H"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1240575001 /home/frea/mrjp/include/Absyn.H
+	<string>
+	<vector>
+
+1240562781 source:/home/frea/mrjp/lexer/Lexer.C
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<string.h>
+	"Parser.H"
+	<unistd.h>
+
+1240575001 /home/frea/mrjp/include/Parser.H
+	<vector>
+	<string>
+
+1240557150 source:/home/frea/mrjp/parser/Absyn.C
+	<algorithm>
+	<string>
+	<iostream>
+	<vector>
+	"Absyn.H"
+
+1240565946 source:/home/frea/mrjp/parser/Parser.C
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<iostream>
+	<algorithm>
+	"Absyn.H"
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+
