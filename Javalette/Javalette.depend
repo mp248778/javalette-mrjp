@@ -2,11 +2,11 @@
 1240568352 source:/home/frea/mrjp/BNFC/doc/examples/runtime.c
 	<stdio.h>
 
-1240557150 source:/home/frea/mrjp/Printer.C
+1240575001 source:/home/frea/mrjp/Printer.C
 	<string>
 	"Printer.H"
 
-1240557150 /home/frea/mrjp/include/Printer.H
+1240575001 /home/frea/mrjp/include/Printer.H
 	"Absyn.H"
 	<stdio.h>
 	<string.h>
@@ -51,4 +51,10 @@
 	<stdlib.h>
 	<stdlib.h>
 	<stdio.h>
+
+1240934604 source:/home/frea/mrjp/Test.C
+	<stdio.h>
+	"Parser.H"
+	"Printer.H"
+	"Absyn.H"
 

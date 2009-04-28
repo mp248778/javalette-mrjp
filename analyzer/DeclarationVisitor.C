@@ -1,8 +1,8 @@
 #include "include/DeclarationVisitor.H"
 
-void _visitDeclaration(JVariable *jv) {
+void DeclarationVisitor::_visitDeclaration(JVariable *jv) {
     if(st.definedInCurrentScope(jv->getName())) {
-        logger.alreadyDefined(st, jv);
+        logger.alreadyDefined(jv, st.lookup(jv->geName()));
         delete jv;
     } else {
         st.add(jv->getName(), jv);

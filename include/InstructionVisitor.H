@@ -1,15 +1,13 @@
-#ifndef DECLARATIONVISOTOR_HEADER
-#define DECLARATIONVISOTOR_HEADER
+#ifndef ANALYZER_HEADER
+#define ANALYZER_HEADER
+/* You might want to change the above name. */
 
 #include "include/Absyn.H"
 #include "include/SymbolTable.H"
-#include "include/Logger.H"
 
-class DeclarationVisitor : public Visitor {
+class Analyzer : public Visitor {
 private:
-    SymbolTable<std::string, Type> &st;
-    Logger &logger;
-    void _visitDeclaration(JVariable*);
+    SymbolTable<std::string, JType*> st;
 public:
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);

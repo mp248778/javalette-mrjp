@@ -29,6 +29,7 @@ int main(int argc, char ** argv) {
         printf("[Linearized Tree]\n");
         PrintAbsyn *p = new PrintAbsyn();
         printf("%s\n\n", p->print(parse_tree));
+
         return 0;
     }
     return 1;
