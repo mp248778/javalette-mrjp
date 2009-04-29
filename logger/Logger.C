@@ -1,18 +1,16 @@
+#include <iostream>
 #include "include/Logger.H"
 #include "include/JType.H"
 
-void Logger::printFileLine(std::string file, std::string line) {
+void Logger::internalVisitorError(const std::string &file, const int &line) {
+    std::cerr << file << ":" << line << " ";
+    std::cerr << "Internal error, please report ASAP\n";
 }
 
-void Logger::internalVisitorError(std::string file, std::string line) {
-    std::cerr << line << ":" << file << " ";
-    std::cerr << "Internal error, please report ASAP\n"
-}
-
-void Logger::alreadyDefined(JType *jnew, JType *jold) {
+void Logger::alreadyDefined(const JSymbol *jnew, const JSymbol *jold) {
     std::cerr << jnew->getName() << " is already defined\n";
 }
 
-void Logger::undefined(Ident *i) {
+void Logger::undefined(const Ident *i) {
     std::cerr << *i << " is undefined\n";
 }

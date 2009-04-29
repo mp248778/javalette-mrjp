@@ -7,10 +7,12 @@
 
 class DeclarationVisitor : public Visitor {
 private:
-    SymbolTable<std::string, Type> &st;
+    SymbolTable<std::string, JSymbol> &st;
     Logger &logger;
     void _visitDeclaration(JVariable*);
+    JType *currentType;
 public:
+    DeclarationVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);
     void visitType(Type* p);

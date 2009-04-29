@@ -39,15 +39,33 @@
 		<Unit filename="../Test.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../analyzer/Analyzer.C">
+		<Unit filename="../analyzer/DeclarationVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../analyzer/Analyzer.H" />
+		<Unit filename="../analyzer/ExpresionVisitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../analyzer/FunctionVisitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../analyzer/InstructionVisitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../include/Absyn.H" />
-		<Unit filename="../include/JTypes.H" />
+		<Unit filename="../include/DeclarationVisitor.H" />
+		<Unit filename="../include/ExpresionVisitor.H" />
+		<Unit filename="../include/FunctionVisitor.H" />
+		<Unit filename="../include/InstructionVisitor.H" />
+		<Unit filename="../include/JType.H" />
+		<Unit filename="../include/Logger.H" />
 		<Unit filename="../include/Parser.H" />
 		<Unit filename="../include/Printer.H" />
+		<Unit filename="../include/Symbol.H" />
+		<Unit filename="../include/SymbolTable.H" />
 		<Unit filename="../lexer/Lexer.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../logger/Logger.C">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../parser/Absyn.C">
@@ -56,9 +74,16 @@
 		<Unit filename="../parser/Parser.C">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../symboltable/Symbol.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../types/JType.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

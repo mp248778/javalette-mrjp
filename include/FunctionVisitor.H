@@ -1,15 +1,20 @@
-#ifndef ANALYZER_HEADER
-#define ANALYZER_HEADER
-/* You might want to change the above name. */
+#ifndef FUNCTIONVISITOR_HEADER
+#define FUNCTIONVISITOR_HEADER
+
 
 #include "include/Absyn.H"
 #include "include/SymbolTable.H"
+#include "include/Logger.H"
+#include "include/Symbol.H"
 
 class FunctionVisitor : public Visitor {
 private:
-    SymbolTable<std::string, Type> st;
-    void _visitFunction(JFunction);
+    SymbolTable<std::string, JSymbol> st;
+    std::vector<JType*> listarg;
+    void _visitFunction(JFunction*);
+    Logger &logger;
 public:
+    FunctionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);
     void visitType(Type* p);

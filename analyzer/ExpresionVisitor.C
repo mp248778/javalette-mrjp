@@ -1,7 +1,9 @@
-#include "ExpresionVisitor.H"
+#include "include/ExpresionVisitor.H"
+
+ExpresionVisitor::ExpresionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
 void ExpresionVisitor::visitListExpr(ListExpr* listexpr) {
-    for(ListExpr::iterator i = listexpr->begin() ; i != listexpr.end() ; ++i) {
+    for (ListExpr::iterator i = listexpr->begin() ; i != listexpr->end() ; ++i) {
         (*i)->accept(this);
     }
 }
@@ -22,8 +24,8 @@ void ExpresionVisitor::visitString(String x) {
 }
 
 void ExpresionVisitor::visitIdent(Ident x) {
-    JType *j = st.lookup(&x);
-    if(!j) logger.undefinedIdent(&x);
+    const JSymbol *j = st.lookup(x);
+    if (!j) logger.undefined(&x);
 }
 
 void ExpresionVisitor::visitAssigment(Assigment *assigment) {
@@ -106,29 +108,32 @@ void ExpresionVisitor::visitModExpr(ModExpr *modexpr) {
 }
 
 void ExpresionVisitor::visitNegExpr(NegExpr *negexpr) {
-    negexpr->expr->accept(this);
+    negexpr->expr_->accept(this);
 }
 
 void ExpresionVisitor::visitPlusExpr(PlusExpr *plusexpr) {
-    plusexpr->expr->accept(this);
+    plusexpr->expr_->accept(this);
 }
 
 void ExpresionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
-    minusexpr->expr->accept(this);
+    minusexpr->expr_->accept(this);
 }
 
 void ExpresionVisitor::visitFunctionCall(FunctionCall *functioncall) {
-    functioncall->ident_->accept(this);
+    if(!st.lookup(functioncall->ident_))
+        logger.undefined(&functioncall->ident_);
     functioncall->listexpr_->accept(this);
 }
 
 void ExpresionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
-    arrayaccess->ident_->accept(this);
+    if(!st.lookup(arrayaccess->ident_))
+        logger.undefined(&arrayaccess->ident_);
     arrayaccess->expr_->accept(this);
 }
 
 void ExpresionVisitor::visitIdentExpr(IdentExpr *identexpr) {
-    identexpr->ident_->accept(this);
+    if(!st.lookup(identexpr->ident_))
+        logger.undefined(&identexpr->ident_);
 }
 
 void ExpresionVisitor::visitLiteralExpr(LiteralExpr *literalexpr) {
@@ -154,64 +159,126 @@ NOTHING MORE INTERESTING HERE
 ******************************************************************************/
 
 
-void ExpresionVisitor::visitFunction(Function *function) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitFunction(Function *function) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitFunctionArg(FunctionArg *functionarg) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitFunctionArg(FunctionArg *functionarg) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitCompundInstr(CompundInstr *compundinstr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitCompundInstr(CompundInstr *compundinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitInnerFunction(InnerFunction *innerfunction) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitListFunDef(ListFunDef* listfundef) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitListFunDef(ListFunDef* listfundef) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitListArg(ListArg* listarg) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitListArg(ListArg* listarg) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitListInstr(ListInstr* listinstr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitListInstr(ListInstr* listinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitProg(Prog* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitProg(Prog* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitFunDef(FunDef* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitFunDef(FunDef* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitType(Type* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitType(Type* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitArg(Arg* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitArg(Arg* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitInstr(Instr* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitInstr(Instr* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitDecl(Decl* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitDecl(Decl* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitExpr(Expr* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitExpr(Expr* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitLiteral(Literal* t) { logger.internalVisitorError(__FILE__, __LINE__); } //abstract class
+void ExpresionVisitor::visitLiteral(Literal* t) {
+    logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
+}
 
-void ExpresionVisitor::visitProgram(Program *program) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitProgram(Program *program) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitIntType(IntType *inttype) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitIntType(IntType *inttype) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitDoubleType(DoubleType *doubletype) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitDoubleType(DoubleType *doubletype) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitVoidType(VoidType *voidtype) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitVoidType(VoidType *voidtype) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitBoolType(BoolType *booltype) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitBoolType(BoolType *booltype) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitReturnExpr(ReturnExpr *returnexpr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitDeclInstr(DeclInstr *declinstr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitDeclInstr(DeclInstr *declinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitConditionalIf(ConditionalIf *conditionalif) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitForLoop(ForLoop *forloop) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitForLoop(ForLoop *forloop) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitWhileLoop(WhileLoop *whileloop) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitWhileLoop(WhileLoop *whileloop) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
-void ExpresionVisitor::visitListDecl(ListDecl* listdecl) { logger.internalVisitorError(__FILE__, __LINE__); }
+void ExpresionVisitor::visitListDecl(ListDecl* listdecl) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}

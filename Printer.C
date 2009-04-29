@@ -1,7 +1,7 @@
 /*** BNFC-Generated Pretty Printer and Abstract Syntax Viewer ***/
 
 #include <string>
-#include "Printer.H"
+#include "include/Printer.H"
 
 //You may wish to change render
 void PrintAbsyn::render(Char c) {

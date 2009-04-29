@@ -5,9 +5,9 @@
 /*                                                                          */
 /****************************************************************************/
 #include <stdio.h>
-#include "Parser.H"
-#include "Printer.H"
-#include "Absyn.H"
+#include "include/Parser.H"
+#include "include/Printer.H"
+#include "include/Absyn.H"
 
 int main(int argc, char ** argv) {
     FILE *input;

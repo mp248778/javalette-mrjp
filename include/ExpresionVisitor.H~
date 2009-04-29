@@ -1,15 +1,15 @@
-#ifndef INSTRUCTIONVISITOR_HEADER
-#define INSTRUCTIONVISITOR_HEADER
-/* You might want to change the above name. */
+#ifndef FUNCTIONVISITOR_HEADER
+#define FUNCTIONVISITOR_HEADER
+
 
 #include "include/Absyn.H"
 #include "include/SymbolTable.H"
-#include "include/Symbol.H"
 #include "include/Logger.H"
 
-class InstructionVisitor : public Visitor {
+class ExpresionVisitor : public Visitor {
 private:
-    SymbolTable<std::string, JSymbol> &st;
+    SymbolTable<std::string, Symbol> st;
+    void _visitFunction(JFunction);
     Logger &logger;
 public:
     void visitProg(Prog* p);
