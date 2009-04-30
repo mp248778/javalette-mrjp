@@ -11,6 +11,7 @@ public:
     virtual bool isDouble() const;
     virtual bool isVoid() const;
     virtual bool sameType(const JType*) const = 0;
+    virtual JType* clone() const = 0;
     virtual ~JType() = 0;
 };
 
@@ -19,6 +20,7 @@ public:
     JInt();
     bool isInt() const;
     bool sameType(const JType*) const;
+    JType* clone() const;
     ~JInt();
 };
 
@@ -27,6 +29,7 @@ public:
     JBool();
     bool isBool() const;
     bool sameType(const JType*) const;
+    JType* clone() const;
     ~JBool();
 };
 
@@ -35,6 +38,7 @@ public:
     JString();
     bool isString() const;
     bool sameType(const JType*) const;
+    JType* clone() const;
     ~JString();
 };
 
@@ -43,6 +47,7 @@ public:
     JDouble();
     bool isDouble() const;
     bool sameType(const JType*) const;
+    JType* clone() const;
     ~JDouble();
 };
 
@@ -51,7 +56,20 @@ public:
     JVoid();
     bool isVoid() const;
     bool sameType(const JType*) const;
+    JType* clone() const;
     ~JVoid();
+};
+
+class JUnknownType : public JType {
+    JUnknownType();
+    bool isInt() const;
+    bool isBool() const;
+    bool isString() const;
+    bool isDouble() const;
+    bool isVoid() const;
+    bool sameType(const JType*) const;
+    JType* clone() const;
+    ~JUnknownType();
 };
 
 #endif

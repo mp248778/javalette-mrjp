@@ -208,12 +208,14 @@ public:
 
 class Expr : public Visitable {
 public:
+    JType* jtype_;
     virtual Expr *clone() const = 0;
     int line_number;
 };
 
 class Literal : public Visitable {
 public:
+    JType *jtype_;
     virtual Literal *clone() const = 0;
     int line_number;
 };

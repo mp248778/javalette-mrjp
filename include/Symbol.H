@@ -15,6 +15,7 @@ protected:
 public:
     virtual std::string getName() const;
     int getLine() const;
+    virtual JType const * getType() const = 0;
     virtual ~JSymbol() = 0;
 };
 
@@ -24,7 +25,9 @@ private:
     std::vector<JType*> listarg;
 public:
     JFunction(const JFunction&);
+    JFunction(const std::string&, JType*, std::vector<JType*>);
     JFunction(const Function*, std::vector<JType*>&);
+    JType const * getType() const;
     void operator=(const JFunction&);
     ~JFunction();
 };
@@ -35,6 +38,8 @@ private:
 public:
     JVariable(JType *, std::string, int line_number);
     JVariable(const JVariable&);
+    JVariable(const std::string&, JType*);
+    JType const * getType() const;
     void operator=(const JVariable&);
     ~JVariable();
 };

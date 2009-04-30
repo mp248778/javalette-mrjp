@@ -51,6 +51,9 @@
 		<Unit filename="../analyzer/InstructionVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../analyzer/Stdfunc.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../include/Absyn.H" />
 		<Unit filename="../include/DeclarationVisitor.H" />
 		<Unit filename="../include/ExpresionVisitor.H" />
@@ -60,6 +63,7 @@
 		<Unit filename="../include/Logger.H" />
 		<Unit filename="../include/Parser.H" />
 		<Unit filename="../include/Printer.H" />
+		<Unit filename="../include/Stdfunc.H" />
 		<Unit filename="../include/Symbol.H" />
 		<Unit filename="../include/SymbolTable.H" />
 		<Unit filename="../lexer/Lexer.C">

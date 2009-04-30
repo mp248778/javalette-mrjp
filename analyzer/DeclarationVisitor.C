@@ -15,16 +15,17 @@ void DeclarationVisitor::_visitDeclaration(JVariable *jv) {
 void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
     currentType = declinstr->type_->getJType();
     declinstr->listdecl_->accept(this);
+    delete currentType;
 }
 
 void DeclarationVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
-    _visitDeclaration(new JVariable(currentType, onlydeclarator->ident_, onlydeclarator->line_number));
+    _visitDeclaration(new JVariable(currentType->clone(), onlydeclarator->ident_, onlydeclarator->line_number));
 }
 
 void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     ExpresionVisitor ev(st, logger);
     initdeclarator->expr_->accept(&ev);
-    _visitDeclaration(new JVariable(currentType, initdeclarator->ident_, initdeclarator->line_number));
+    _visitDeclaration(new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number));
 }
 
 void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {

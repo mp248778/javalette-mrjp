@@ -1,6 +1,7 @@
 echo "Good :"
 for i in `ls examples/good/*.jl`
 do
+	echo $i
 	./testJavalette < "$i" &> /dev/null
 	if [ `echo $?` -eq 1 ]
 	then

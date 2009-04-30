@@ -12,6 +12,7 @@ private:
     SymbolTable<std::string, JSymbol> &st;
     void _visitFunction(JFunction);
     Logger &logger;
+    std::stack<JType*> types;
 public:
     ExpresionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);

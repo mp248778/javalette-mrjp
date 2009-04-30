@@ -12,6 +12,7 @@
 #include "include/Symbol.H"
 #include "include/Logger.H"
 #include "include/InstructionVisitor.H"
+#include "include/Stdfunc.H"
 
 int main(int argc, char ** argv) {
     FILE *input;
@@ -35,9 +36,11 @@ int main(int argc, char ** argv) {
         printf("%s\n\n", p->print(parse_tree));
         SymbolTable<std::string, JSymbol> st;
         Logger logger;
+        populateSymbolTable(st);
         InstructionVisitor iv(st, logger);
         parse_tree->accept(&iv);
-        return 0;
+        if(logger.anyFatalErrors()) return 1;
+        else return 0;
     }
     return 1;
 }

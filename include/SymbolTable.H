@@ -54,7 +54,7 @@ SymbolTable<key, value>::SymbolTable() {
 
 template <class key, class value>
 SymbolTable<key, value>::~SymbolTable() {
-    while(depth) delScope();
+    while(depth >= 0) delScope();
 }
 
 template <class key, class value>
