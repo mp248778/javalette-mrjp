@@ -12,7 +12,7 @@
 	<string.h>
 	<stdlib.h>
 
-1241016653 /home/frea/mrjp/include/Absyn.H
+1241087665 /home/frea/mrjp/include/Absyn.H
 	<string>
 	<vector>
 	"include/JType.H"
@@ -31,20 +31,20 @@
 	<vector>
 	<string>
 
-1241016920 source:/home/frea/mrjp/parser/Absyn.C
+1241018534 source:/home/frea/mrjp/parser/Absyn.C
 	<algorithm>
 	<string>
 	<iostream>
 	<vector>
-	"Absyn.H"
+	"include/Absyn.H"
 
-1241007551 source:/home/frea/mrjp/parser/Parser.C
+1241099823 source:/home/frea/mrjp/parser/Parser.C
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<iostream>
 	<algorithm>
-	"Absyn.H"
+	"include/Absyn.H"
 	<stddef.h>
 	<libintl.h>
 	<alloca.h>
@@ -53,51 +53,57 @@
 	<stdlib.h>
 	<stdio.h>
 
-1241018342 source:/home/frea/mrjp/Test.C
+1241086675 source:/home/frea/mrjp/Test.C
 	<stdio.h>
 	"include/Parser.H"
 	"include/Printer.H"
 	"include/Absyn.H"
+	"include/SymbolTable.H"
+	"include/Symbol.H"
+	"include/Logger.H"
+	"include/InstructionVisitor.H"
 
 1241017841 /home/frea/mrjp//include/JType.H
 
-1241015474 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
+1241096095 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
 	"include/DeclarationVisitor.H"
+	"include/ExpresionVisitor.H"
 
 1241015438 /home/frea/mrjp//include/DeclarationVisitor.H
 	"include/Absyn.H"
 	"include/SymbolTable.H"
 	"include/Logger.H"
 
-1241016653 /home/frea/mrjp//include/Absyn.H
+1241087665 /home/frea/mrjp//include/Absyn.H
 	<string>
 	<vector>
 	"include/JType.H"
 
-1241017252 /home/frea/mrjp//include/SymbolTable.H
+1241092972 /home/frea/mrjp//include/SymbolTable.H
 	<map>
 	<stack>
 	<list>
+	<iostream>
 
-1241013255 /home/frea/mrjp//include/Logger.H
+1241094001 /home/frea/mrjp//include/Logger.H
 	"include/Symbol.H"
 
-1241015807 /home/frea/mrjp//include/Symbol.H
+1241087991 /home/frea/mrjp//include/Symbol.H
 	<string>
 	<vector>
 	"include/Absyn.H"
 	"include/JType.H"
 
-1241015396 source:/home/frea/mrjp/analyzer/ExpresionVisitor.C
+1241094117 source:/home/frea/mrjp/analyzer/ExpresionVisitor.C
 	"include/ExpresionVisitor.H"
 
-1241015341 /home/frea/mrjp//include/ExpresionVisitor.H
+1241091141 /home/frea/mrjp//include/ExpresionVisitor.H
 	"include/Absyn.H"
 	"include/SymbolTable.H"
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241018360 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
+1241096421 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
 	"include/FunctionVisitor.H"
 
 1241014808 /home/frea/mrjp/include/FunctionVisitor.H
@@ -106,30 +112,30 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241015498 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
+1241096292 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
 	"include/InstructionVisitor.H"
 	"include/FunctionVisitor.H"
 	"include/ExpresionVisitor.H"
 	"include/DeclarationVisitor.H"
 
-1241015099 /home/frea/mrjp//include/InstructionVisitor.H
+1241091234 /home/frea/mrjp//include/InstructionVisitor.H
 	"include/Absyn.H"
 	"include/SymbolTable.H"
 	"include/Symbol.H"
 	"include/Logger.H"
 
-1241014808 /home/frea/mrjp//include/FunctionVisitor.H
+1241091125 /home/frea/mrjp//include/FunctionVisitor.H
 	"include/Absyn.H"
 	"include/SymbolTable.H"
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241015700 source:/home/frea/mrjp/logger/Logger.C
+1241094101 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
 	"include/Logger.H"
 	"include/JType.H"
 
-1241017957 source:/home/frea/mrjp/symboltable/Symbol.C
+1241088694 source:/home/frea/mrjp/symboltable/Symbol.C
 	"include/Symbol.H"
 
 1241007545 source:/home/frea/mrjp/symboltable/SymbolTable.C
@@ -139,4 +145,29 @@
 
 1241017969 source:/home/frea/mrjp/types/JType.C
 	"include/JType.H"
+
+1241092972 /home/frea/mrjp/include/SymbolTable.H
+	<map>
+	<stack>
+	<list>
+	<iostream>
+
+1241087991 /home/frea/mrjp/include/Symbol.H
+	<string>
+	<vector>
+	"include/Absyn.H"
+	"include/JType.H"
+
+1241094001 /home/frea/mrjp/include/Logger.H
+	"include/Symbol.H"
+
+1241091234 /home/frea/mrjp/include/InstructionVisitor.H
+	"include/Absyn.H"
+	"include/SymbolTable.H"
+	"include/Symbol.H"
+	"include/Logger.H"
+
+1241007505 /home/frea/mrjp//include/Parser.H
+	<vector>
+	<string>
 

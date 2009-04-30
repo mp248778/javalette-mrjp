@@ -1,0 +1,23 @@
+int y() {
+	x() + main();
+}
+
+int main() {
+        int x = 3 _;
+        int y = x + 17;
+        int x = y;
+}
+
+int x() {
+	10 + 2 + 3;
+	10 + 3;
+ 	10 +3; 
+}
+
+int x() {
+	10 + 3;
+	asd a = 3;
+}
+
+int main () {
+}

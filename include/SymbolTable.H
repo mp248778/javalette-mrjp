@@ -5,32 +5,38 @@
 #include <stack>
 #include <list>
 
+
+
+#include <iostream>
+
 template <class key, class value>
 class SymbolTable {
 public:
     SymbolTable();
     const value* lookup(const key &) const;
-    void add(const key&, const value&);
+    void add(const key&, const value*);
     bool definedInCurrentScope(const key&) const;
     void newScope();
     void delScope();
     ~SymbolTable();
 
     class Symbol {
-        const value& val;
+        const value* val;
         const int scopeDepth;
+    private:
+        Symbol(const Symbol& s) {}
     public:
-        Symbol(const value &v, const int d) : val(v), scopeDepth(d) {}
+        Symbol(const value *v, const int d) : val(v), scopeDepth(d) {}
         const int  getDepth() const {
             return scopeDepth;
         }
-        const value& getValue() const {
+        const value* getValue() const {
             return val;
         }
-        ~Symbol() {}
+        ~Symbol() { delete val; }
     };
 
-    typedef std::stack<Symbol> valstack;
+    typedef std::stack<Symbol*> valstack;
     typedef std::list<valstack *> scopeList;
     typedef typename std::list<valstack *>::iterator scopeListIt;
     typedef typename std::map<key, valstack>::const_iterator stIt;
@@ -48,7 +54,7 @@ SymbolTable<key, value>::SymbolTable() {
 
 template <class key, class value>
 SymbolTable<key, value>::~SymbolTable() {
-    //nuttinh, not allocating a single thing
+    while(depth) delScope();
 }
 
 template <class key, class value>
@@ -61,7 +67,8 @@ template <class key, class value>
 void SymbolTable<key, value>::delScope() {
     depth--;
     scopeList *del = inst.top();
-    for (scopeListIt it = del->begin(); it != del->end(); it++) {
+    for (scopeListIt it = del->begin(); it != del->end(); ++it) {
+        delete (**it).top();
         (**it).pop();
     }
     inst.pop();
@@ -69,23 +76,23 @@ void SymbolTable<key, value>::delScope() {
 }
 
 template <class key, class value>
-void SymbolTable<key, value>::add(const key& k, const value& v) {
-    st[k].push(Symbol(v, depth));
+void SymbolTable<key, value>::add(const key& k, const value* v) {
+    st[k].push(new Symbol(v, depth));
     inst.top()->push_front(&st[k]);
 }
 
 template <class key, class value>
 bool SymbolTable<key, value>::definedInCurrentScope(const key &k) const {
     stIt it = st.find(k);
-    if (it == st.end()) return false;
-    else return it->second.top().getDepth() == depth;
+    if (it == st.end() || it->second.empty()) return false;
+    else return it->second.top()->getDepth() == depth;
 }
 
 template <class key, class value>
 const value* SymbolTable<key, value>::lookup(const key& k) const {
     stIt it = st.find(k);
     if (it == st.end() || it->second.empty()) return NULL;
-    else return &it->second.top().getValue();
+    else return it->second.top()->getValue();
 }
 
 #endif

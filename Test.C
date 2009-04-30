@@ -8,6 +8,10 @@
 #include "include/Parser.H"
 #include "include/Printer.H"
 #include "include/Absyn.H"
+#include "include/SymbolTable.H"
+#include "include/Symbol.H"
+#include "include/Logger.H"
+#include "include/InstructionVisitor.H"
 
 int main(int argc, char ** argv) {
     FILE *input;
@@ -29,7 +33,10 @@ int main(int argc, char ** argv) {
         printf("[Linearized Tree]\n");
         PrintAbsyn *p = new PrintAbsyn();
         printf("%s\n\n", p->print(parse_tree));
-
+        SymbolTable<std::string, JSymbol> st;
+        Logger logger;
+        InstructionVisitor iv(st, logger);
+        parse_tree->accept(&iv);
         return 0;
     }
     return 1;

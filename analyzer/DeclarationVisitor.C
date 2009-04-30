@@ -1,4 +1,5 @@
 #include "include/DeclarationVisitor.H"
+#include "include/ExpresionVisitor.H"
 
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 
@@ -6,9 +7,9 @@ void DeclarationVisitor::_visitDeclaration(JVariable *jv) {
     if (st.definedInCurrentScope(jv->getName())) {
         logger.alreadyDefined(jv, st.lookup(jv->getName()));
         delete jv;
-    } else {
-        st.add(jv->getName(), *jv);
     }
+    else
+        st.add(jv->getName(), jv);
 }
 
 void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
@@ -17,13 +18,19 @@ void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
 }
 
 void DeclarationVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
-    _visitDeclaration(new JVariable(currentType, onlydeclarator->ident_));
+    _visitDeclaration(new JVariable(currentType, onlydeclarator->ident_, onlydeclarator->line_number));
 }
 
 void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
-    //ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    //initdeclarator->accept(ev);
-    _visitDeclaration(new JVariable(currentType, initdeclarator->ident_));
+    ExpresionVisitor ev(st, logger);
+    initdeclarator->expr_->accept(&ev);
+    _visitDeclaration(new JVariable(currentType, initdeclarator->ident_, initdeclarator->line_number));
+}
+
+void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {
+    for (ListDecl::iterator i = listdecl->begin() ; i != listdecl->end() ; ++i) {
+        (*i)->accept(this);
+    }
 }
 
 /******************************************************************************
@@ -247,10 +254,6 @@ void DeclarationVisitor::visitLiteralString(LiteralString *literalstring) {
 }
 
 void DeclarationVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 

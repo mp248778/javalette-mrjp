@@ -9,7 +9,7 @@
 
 class ExpresionVisitor : public Visitor {
 private:
-    SymbolTable<std::string, JSymbol> st;
+    SymbolTable<std::string, JSymbol> &st;
     void _visitFunction(JFunction);
     Logger &logger;
 public:

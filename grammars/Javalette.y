@@ -64,7 +64,7 @@ Prog* pProg(FILE *inp)
 
 }
 
-%token _ERROR_
+%token _ERROR_ "symbol"
 %token _SYMB_0 "("    //   (
 %token _SYMB_1 ")"    //   )
 %token _SYMB_2 "{"    //   {
@@ -128,10 +128,10 @@ Prog* pProg(FILE *inp)
 %type <listdecl_> ListDecl
 %type <listexpr_> ListExpr
 
-%token<string_> _STRING_
-%token<int_> _INTEGER_
-%token<double_> _DOUBLE_
-%token<string_> _IDENT_
+%token<string_> _STRING_ "string"
+%token<int_> _INTEGER_ "integer"
+%token<double_> _DOUBLE_ "double"
+%token<string_> _IDENT_ "identificator"
 
 %%
 Prog : ListFunDef {  std::reverse($1->begin(),$1->end()) ;$$ = new Program($1); $$->line_number = yy_mylinenumber; YY_RESULT_Prog_= $$; } 
@@ -165,6 +165,7 @@ Decl : _IDENT_ {  $$ = new OnlyDeclarator($1); $$->line_number = yy_mylinenumber
 ;
 Expr : Expr11 _SYMB_5 Expr {  $$ = new Assigment($1, $3); $$->line_number = yy_mylinenumber;  } 
   | Expr1 {  $$ = $1;  }
+  | error {  $$ = NULL; *jerror = 1; }
 ;
 Expr1 : _IDENT_ _SYMB_6 {  $$ = new PostDecrement($1); $$->line_number = yy_mylinenumber;  } 
   | _IDENT_ _SYMB_7 {  $$ = new PostIncrement($1); $$->line_number = yy_mylinenumber;  }
@@ -215,10 +216,10 @@ Literal : _INTEGER_ {  $$ = new LiteralInteger($1); $$->line_number = yy_mylinen
   | _DOUBLE_ {  $$ = new LiteralDouble($1); $$->line_number = yy_mylinenumber;  }
   | _STRING_ {  $$ = new LiteralString($1); $$->line_number = yy_mylinenumber;  }
   | _SYMB_34 {  $$ = new LiteralBoolean($1); $$->line_number = yy_mylinenumber;  }
-  | error { $$ = NULL; *jerror = 1; }
 ;
 ListFunDef : FunDef {  $$ = new ListFunDef() ; $$->push_back($1);  } 
   | FunDef ListFunDef {  $2->push_back($1) ; $$ = $2 ;  }
+  | error {  $$ = new ListFunDef(); *jerror = 1; }
 ;
 ListArg : /* empty */ {  $$ = new ListArg();  } 
   | Arg {  $$ = new ListArg() ; $$->push_back($1);  }
@@ -229,6 +230,7 @@ ListInstr2 : /* empty */ {  $$ = new ListInstr();  }
 ;
 ListDecl : Decl {  $$ = new ListDecl() ; $$->push_back($1);  } 
   | Decl _SYMB_24 ListDecl {  $3->push_back($1) ; $$ = $3 ;  }
+  | error {  $$ = new ListDecl(); *jerror = 1; }
 ;
 ListExpr : /* empty */ {  $$ = new ListExpr();  } 
   | Expr {  $$ = new ListExpr() ; $$->push_back($1);  }

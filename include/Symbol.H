@@ -10,9 +10,11 @@
 class JSymbol {
 protected:
     std::string name;
+    int line_number;
     JSymbol() {}
 public:
     virtual std::string getName() const;
+    int getLine() const;
     virtual ~JSymbol() = 0;
 };
 
@@ -31,7 +33,7 @@ class JVariable : public JSymbol {
 private:
     JType *type;
 public:
-    JVariable(JType *, std::string);
+    JVariable(JType *, std::string, int line_number);
     JVariable(const JVariable&);
     void operator=(const JVariable&);
     ~JVariable();

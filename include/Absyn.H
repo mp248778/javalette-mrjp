@@ -202,6 +202,7 @@ public:
 class Decl : public Visitable {
 public:
     virtual Decl *clone() const = 0;
+    Ident ident_;
     int line_number;
 };
 
@@ -453,7 +454,6 @@ public:
 
 class OnlyDeclarator : public Decl {
 public:
-    Ident ident_;
 
     OnlyDeclarator(const OnlyDeclarator &);
     OnlyDeclarator &operator=(const OnlyDeclarator &);
@@ -466,7 +466,6 @@ public:
 
 class InitDeclarator : public Decl {
 public:
-    Ident ident_;
     Expr *expr_;
 
     InitDeclarator(const InitDeclarator &);

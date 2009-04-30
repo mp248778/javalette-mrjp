@@ -12,6 +12,7 @@ private:
     SymbolTable<std::string, JSymbol> &st;
     Logger &logger;
 public:
+    InstructionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);
     void visitType(Type* p);

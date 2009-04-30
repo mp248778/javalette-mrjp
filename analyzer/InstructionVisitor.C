@@ -3,13 +3,11 @@
 #include "include/ExpresionVisitor.H"
 #include "include/DeclarationVisitor.H"
 
-//TODO dodac do symbol table listle arguentow f-cji
-//TODO dodac odwiedzanie f-cji
+InstructionVisitor::InstructionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
 void InstructionVisitor::visitListFunDef(ListFunDef* listfundef) {
-    FunctionVisitor *fv = new FunctionVisitor(st, logger);
-    listfundef->accept(fv);
-    delete fv;
+    FunctionVisitor fv(st, logger);
+    listfundef->accept(&fv);
 
     for (ListFunDef::iterator i = listfundef->begin(); i != listfundef->end(); ++i ) {
         st.newScope();
@@ -19,6 +17,8 @@ void InstructionVisitor::visitListFunDef(ListFunDef* listfundef) {
 }
 
 void InstructionVisitor::visitListInstr(ListInstr* listinstr) {
+    FunctionVisitor fv(st, logger);
+    listinstr->accept(&fv);
     for (ListInstr::iterator i = listinstr->begin() ; i != listinstr->end() ; ++i) {
         (*i)->accept(this);
     }
@@ -37,31 +37,25 @@ void InstructionVisitor::visitCompundInstr(CompundInstr *compundinstr) {
 }
 
 void InstructionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
-    ExpresionVisitor *ev =
-        new ExpresionVisitor(st, logger);
-    returnexprinstr->expr_->accept(ev);
-    delete ev;
+    ExpresionVisitor ev(st, logger);
+    returnexprinstr->expr_->accept(&ev);
 }
 
 void InstructionVisitor::visitDeclInstr(DeclInstr *declinstr) {
-    DeclarationVisitor *dv = new DeclarationVisitor(st, logger);
-    dv->visitDeclInstr(declinstr);
-    delete dv;
+    DeclarationVisitor dv(st, logger);
+    declinstr->accept(&dv);
 }
 
 void InstructionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
-    ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    conditionalif->expr_->accept(ev);
-    delete ev;
+    ExpresionVisitor ev(st, logger);
+    conditionalif->expr_->accept(&ev);
 
     conditionalif->instr_->accept(this);
-
 }
 
 void InstructionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
-    ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    conditionalifelse->expr_->accept(ev);
-    delete ev;
+    ExpresionVisitor ev(st, logger);
+    conditionalifelse->expr_->accept(&ev);
 
     conditionalifelse->instr_1->accept(this);
     conditionalifelse->instr_2->accept(this);
@@ -69,29 +63,25 @@ void InstructionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalif
 }
 
 void InstructionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
-    ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    expresioninstr->expr_->accept(ev);
+    ExpresionVisitor ev(st, logger);
+    expresioninstr->expr_->accept(&ev);
 }
 
 void InstructionVisitor::visitForLoop(ForLoop *forloop) {
-    DeclarationVisitor *dv = new DeclarationVisitor(st, logger);
-    forloop->decl_->accept(dv);
-    delete dv;
+    DeclarationVisitor dv(st, logger);
+    forloop->decl_->accept(&dv);
 
-    ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    forloop->expr_1->accept(ev);
-    delete ev;
-    ev = new ExpresionVisitor(st, logger);
-    forloop->expr_2->accept(ev);
-    delete ev;
+    ExpresionVisitor ev(st, logger);
+    forloop->expr_1->accept(&ev);
+    ExpresionVisitor ev2(st, logger);
+    forloop->expr_2->accept(&ev2);
 
     forloop->instr_->accept(this);
 }
 
 void InstructionVisitor::visitWhileLoop(WhileLoop *whileloop) {
-    ExpresionVisitor *ev = new ExpresionVisitor(st, logger);
-    whileloop->expr_->accept(ev);
-    delete ev;
+    ExpresionVisitor ev(st, logger);
+    whileloop->expr_->accept(&ev);
     whileloop->instr_->accept(this);
 
 }
@@ -100,15 +90,27 @@ void InstructionVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
 }
 
 void InstructionVisitor::visitFunction(Function *function) {
+    function->listarg_->accept(this);
+    function->instr_->accept(this);
 }
 
 void InstructionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
+    innerfunction->fundef_->accept(this);
 }
 
 void InstructionVisitor::visitListArg(ListArg* listarg) {
+    for (ListArg::iterator i = listarg->begin() ; i != listarg->end() ; ++i) {
+        (*i)->accept(this);
+    }
 }
 
 void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
+    JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
+    if (st.definedInCurrentScope(jv->getName())) {
+        logger.alreadyDefined(jv, st.lookup(jv->getName()));
+        delete jv;
+    }
+    else st.add(jv->getName(), jv);
 }
 
 /******************************************************************************

@@ -9,7 +9,7 @@
 
 class FunctionVisitor : public Visitor {
 private:
-    SymbolTable<std::string, JSymbol> st;
+    SymbolTable<std::string, JSymbol> &st;
     std::vector<JType*> listarg;
     void _visitFunction(JFunction*);
     Logger &logger;

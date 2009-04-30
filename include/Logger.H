@@ -7,7 +7,7 @@ class Logger {
 public:
     void internalVisitorError(const std::string&, const int&);
     void alreadyDefined(const JSymbol *, const JSymbol *);
-    void undefined(const Ident *i);
+    void undefined(const Ident *i, int line_number);
 };
 
 #endif

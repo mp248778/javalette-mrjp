@@ -23,11 +23,6 @@ void ExpresionVisitor::visitDouble(Double x) {
 void ExpresionVisitor::visitString(String x) {
 }
 
-void ExpresionVisitor::visitIdent(Ident x) {
-    const JSymbol *j = st.lookup(x);
-    if (!j) logger.undefined(&x);
-}
-
 void ExpresionVisitor::visitAssigment(Assigment *assigment) {
     assigment->expr_1->accept(this);
     assigment->expr_2->accept(this);
@@ -121,19 +116,19 @@ void ExpresionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
 
 void ExpresionVisitor::visitFunctionCall(FunctionCall *functioncall) {
     if(!st.lookup(functioncall->ident_))
-        logger.undefined(&functioncall->ident_);
+        logger.undefined(&functioncall->ident_, functioncall->line_number);
     functioncall->listexpr_->accept(this);
 }
 
 void ExpresionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
     if(!st.lookup(arrayaccess->ident_))
-        logger.undefined(&arrayaccess->ident_);
+        logger.undefined(&arrayaccess->ident_, arrayaccess->line_number);
     arrayaccess->expr_->accept(this);
 }
 
 void ExpresionVisitor::visitIdentExpr(IdentExpr *identexpr) {
     if(!st.lookup(identexpr->ident_))
-        logger.undefined(&identexpr->ident_);
+        logger.undefined(&identexpr->ident_, identexpr->line_number);
 }
 
 void ExpresionVisitor::visitLiteralExpr(LiteralExpr *literalexpr) {
@@ -158,6 +153,9 @@ void ExpresionVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
 
+void ExpresionVisitor::visitIdent(Ident x) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
 void ExpresionVisitor::visitFunction(Function *function) {
     logger.internalVisitorError(__FILE__, __LINE__);
