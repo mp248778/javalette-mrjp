@@ -1,4 +1,7 @@
-#include "include/FunctionVisitor.H"
+#include "FunctionVisitor.H"
+
+//sprawdzac czy returny sa wszedzie?
+//typ returna sprawdzic
 
 FunctionVisitor::FunctionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {
 }

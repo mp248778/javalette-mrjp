@@ -1,4 +1,4 @@
-#include "include/Stdfunc.H"
+#include "Stdfunc.H"
 
 void populateSymbolTable(SymbolTable<std::string, JSymbol> &st) {
     st.newScope(); //global scope

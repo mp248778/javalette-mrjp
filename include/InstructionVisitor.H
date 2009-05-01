@@ -2,10 +2,10 @@
 #define INSTRUCTIONVISITOR_HEADER
 /* You might want to change the above name. */
 
-#include "include/Absyn.H"
-#include "include/SymbolTable.H"
-#include "include/Symbol.H"
-#include "include/Logger.H"
+#include "Absyn.H"
+#include "SymbolTable.H"
+#include "Symbol.H"
+#include "Logger.H"
 
 class InstructionVisitor : public Visitor {
 private:

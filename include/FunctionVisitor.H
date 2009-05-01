@@ -2,10 +2,10 @@
 #define FUNCTIONVISITOR_HEADER
 
 
-#include "include/Absyn.H"
-#include "include/SymbolTable.H"
-#include "include/Logger.H"
-#include "include/Symbol.H"
+#include "Absyn.H"
+#include "SymbolTable.H"
+#include "Logger.H"
+#include "Symbol.H"
 
 class FunctionVisitor : public Visitor {
 private:

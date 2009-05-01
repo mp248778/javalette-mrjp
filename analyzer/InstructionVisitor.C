@@ -1,7 +1,7 @@
-#include "include/InstructionVisitor.H"
-#include "include/FunctionVisitor.H"
-#include "include/ExpresionVisitor.H"
-#include "include/DeclarationVisitor.H"
+#include "InstructionVisitor.H"
+#include "FunctionVisitor.H"
+#include "ExpresionVisitor.H"
+#include "DeclarationVisitor.H"
 
 InstructionVisitor::InstructionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
@@ -109,8 +109,7 @@ void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
     if (st.definedInCurrentScope(jv->getName())) {
         logger.alreadyDefined(jv, st.lookup(jv->getName()));
         delete jv;
-    }
-    else st.add(jv->getName(), jv);
+    } else st.add(jv->getName(), jv);
 }
 
 /******************************************************************************

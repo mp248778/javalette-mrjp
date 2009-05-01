@@ -39,6 +39,9 @@
 		<Unit filename="../Test.C">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../analyzer/AssigmentVisitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../analyzer/DeclarationVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>

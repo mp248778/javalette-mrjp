@@ -2,9 +2,9 @@
 1240568352 source:/home/frea/mrjp/BNFC/doc/examples/runtime.c
 	<stdio.h>
 
-1241018145 source:/home/frea/mrjp/Printer.C
+1241175316 source:/home/frea/mrjp/Printer.C
 	<string>
-	"include/Printer.H"
+	"Printer.H"
 
 1241007501 /home/frea/mrjp/include/Printer.H
 	"Absyn.H"
@@ -17,34 +17,34 @@
 	<vector>
 	"include/JType.H"
 
-1241018520 source:/home/frea/mrjp/lexer/Lexer.C
+1241175309 source:/home/frea/mrjp/lexer/Lexer.C
 	<stdio.h>
 	<string.h>
 	<errno.h>
 	<stdlib.h>
 	<inttypes.h>
 	<string.h>
-	"include/Parser.H"
+	"Parser.H"
 	<unistd.h>
 
 1241007505 /home/frea/mrjp/include/Parser.H
 	<vector>
 	<string>
 
-1241018534 source:/home/frea/mrjp/parser/Absyn.C
+1241175308 source:/home/frea/mrjp/parser/Absyn.C
 	<algorithm>
 	<string>
 	<iostream>
 	<vector>
-	"include/Absyn.H"
+	"Absyn.H"
 
-1241100033 source:/home/frea/mrjp/parser/Parser.C
+1241175308 source:/home/frea/mrjp/parser/Parser.C
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<iostream>
 	<algorithm>
-	"include/Absyn.H"
+	"Absyn.H"
 	<stddef.h>
 	<libintl.h>
 	<alloca.h>
@@ -53,22 +53,22 @@
 	<stdlib.h>
 	<stdio.h>
 
-1241103713 source:/home/frea/mrjp/Test.C
+1241175316 source:/home/frea/mrjp/Test.C
 	<stdio.h>
-	"include/Parser.H"
-	"include/Printer.H"
-	"include/Absyn.H"
-	"include/SymbolTable.H"
-	"include/Symbol.H"
-	"include/Logger.H"
-	"include/InstructionVisitor.H"
-	"include/Stdfunc.H"
+	"Parser.H"
+	"Printer.H"
+	"Absyn.H"
+	"SymbolTable.H"
+	"Symbol.H"
+	"Logger.H"
+	"InstructionVisitor.H"
+	"Stdfunc.H"
 
 1241109419 /home/frea/mrjp//include/JType.H
 
-1241101318 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
-	"include/DeclarationVisitor.H"
-	"include/ExpresionVisitor.H"
+1241186532 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
+	"DeclarationVisitor.H"
+	"ExpresionVisitor.H"
 
 1241015438 /home/frea/mrjp//include/DeclarationVisitor.H
 	"include/Absyn.H"
@@ -95,8 +95,8 @@
 	"include/Absyn.H"
 	"include/JType.H"
 
-1241104821 source:/home/frea/mrjp/analyzer/ExpresionVisitor.C
-	"include/ExpresionVisitor.H"
+1241189734 source:/home/frea/mrjp/analyzer/ExpresionVisitor.C
+	"ExpresionVisitor.H"
 
 1241104064 /home/frea/mrjp//include/ExpresionVisitor.H
 	"include/Absyn.H"
@@ -104,8 +104,8 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241096421 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
-	"include/FunctionVisitor.H"
+1241183561 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
+	"FunctionVisitor.H"
 
 1241014808 /home/frea/mrjp/include/FunctionVisitor.H
 	"include/Absyn.H"
@@ -113,11 +113,11 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241096292 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
-	"include/InstructionVisitor.H"
-	"include/FunctionVisitor.H"
-	"include/ExpresionVisitor.H"
-	"include/DeclarationVisitor.H"
+1241175316 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
+	"InstructionVisitor.H"
+	"FunctionVisitor.H"
+	"ExpresionVisitor.H"
+	"DeclarationVisitor.H"
 
 1241091234 /home/frea/mrjp//include/InstructionVisitor.H
 	"include/Absyn.H"
@@ -131,21 +131,21 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241101432 source:/home/frea/mrjp/logger/Logger.C
+1241189621 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
-	"include/Logger.H"
-	"include/JType.H"
+	"Logger.H"
+	"JType.H"
 
-1241104525 source:/home/frea/mrjp/symboltable/Symbol.C
-	"include/Symbol.H"
+1241188230 source:/home/frea/mrjp/symboltable/Symbol.C
+	"Symbol.H"
 
 1241007545 source:/home/frea/mrjp/symboltable/SymbolTable.C
 	<string>
 	<iostream>
 	"include/SymbolTable.H"
 
-1241101255 source:/home/frea/mrjp/types/JType.C
-	"include/JType.H"
+1241189891 source:/home/frea/mrjp/types/JType.C
+	"JType.H"
 
 1241103751 /home/frea/mrjp/include/SymbolTable.H
 	<map>
@@ -172,8 +172,8 @@
 	<vector>
 	<string>
 
-1241103598 source:/home/frea/mrjp/analyzer/Stdfunc.C
-	"include/Stdfunc.H"
+1241175316 source:/home/frea/mrjp/analyzer/Stdfunc.C
+	"Stdfunc.H"
 
 1241102222 /home/frea/mrjp//include/Stdfunc.H
 	"include/SymbolTable.H"
@@ -182,4 +182,6 @@
 1241102222 /home/frea/mrjp/include/Stdfunc.H
 	"include/SymbolTable.H"
 	"include/Symbol.H"
+
+1241185918 source:/home/frea/mrjp/analyzer/AssigmentVisitor.C
 

@@ -1,6 +1,9 @@
 #include <iostream>
-#include "include/Logger.H"
-#include "include/JType.H"
+#include "Logger.H"
+#include "JType.H"
+
+//lepsze errory zrobic, np. lukac do symboltable i mowic, co to bylo
+
 
 void Logger::internalVisitorError(const std::string &file, const int &line) {
     std::cerr << file << ":" << line << " ";
@@ -18,10 +21,49 @@ void Logger::undefined(const Ident *i, int line_number) {
     fatal = true;
 }
 
+void Logger::notAType(Expr *e, std::string type) {
+    std::cerr << ":" << e->line_number << ": type of expression is not " << type << "\n";
+    fatal = true;
+}
+
+void Logger::notANumeric(Expr *e) {
+    notAType(e, "int or double");
+}
+
+void Logger::notEqualTypes(Expr *e, JType *t1, JType *t2) {
+    std::cerr << ":" << e->line_number << ": expression types do not match, got " << t1->toString() << " and " << t2->toString() << "\n";
+}
+
+void Logger::badAmountOfArguments(FunctionCall *fc) {
+    std::cerr << ":" << fc->line_number << ": call to " << fc->ident_ << " has wrong number of arguments\n";
+    fatal = true;
+}
+
+void Logger::notAnArray(ArrayAccess *aa) {
+    std::cerr << ":" << aa->line_number << ": " << aa->ident_ << " is not declared as an array\n";
+    fatal = true;
+}
+
+void Logger::notAFunction(FunctionCall *fc) {
+    std::cerr << ":" << fc->line_number << ": " << fc->ident_ << " is not declared as a function\n";
+}
+
+void Logger::notAVariable(IdentExpr *ie) {
+    std::cerr << ":" << ie->line_number << ": " << ie->ident_ << " is not declared as a variable\n";
+}
+
+void Logger::notAComparable(JType *t1, JType *t2, int line_number) {
+    std::cerr << ":" << line_number << ": " << t1->toString() << " type is not comparable with " << t2->toString() << "\n";
+}
+
+void Logger::uninitializedValue(IdentExpr *ie) {
+    std::cerr << ":" << ie->line_number << ": " << ie->ident_ << " variable is used before initialization\n";
+}
+
 Logger::Logger() {
     fatal = false;
 }
 
-bool Logger::anyFatalErrors() {
+bool Logger::anyFatalErrors() const {
     return fatal;
 }

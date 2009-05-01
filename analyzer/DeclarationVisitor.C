@@ -1,5 +1,5 @@
-#include "include/DeclarationVisitor.H"
-#include "include/ExpresionVisitor.H"
+#include "DeclarationVisitor.H"
+#include "ExpresionVisitor.H"
 
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 
@@ -10,6 +10,7 @@ void DeclarationVisitor::_visitDeclaration(JVariable *jv) {
     }
     else
         st.add(jv->getName(), jv);
+
 }
 
 void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
@@ -25,7 +26,9 @@ void DeclarationVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
 void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     ExpresionVisitor ev(st, logger);
     initdeclarator->expr_->accept(&ev);
-    _visitDeclaration(new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number));
+    JVariable *jv = new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number);
+    jv->initialized();
+    _visitDeclaration(jv);
 }
 
 void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {

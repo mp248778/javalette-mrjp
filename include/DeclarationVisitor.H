@@ -1,9 +1,9 @@
 #ifndef DECLARATIONVISOTOR_HEADER
 #define DECLARATIONVISOTOR_HEADER
 
-#include "include/Absyn.H"
-#include "include/SymbolTable.H"
-#include "include/Logger.H"
+#include "Absyn.H"
+#include "SymbolTable.H"
+#include "Logger.H"
 
 class DeclarationVisitor : public Visitor {
 private:

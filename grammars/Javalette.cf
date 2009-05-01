@@ -10,7 +10,7 @@ FunctionArg.		Arg	::=	Type Ident ;
 
 CompundInstr.		Instr1	::=	"{" [Instr2] "}" ;
 _.			Instr2	::=	Instr ;
-InnnerFunction		Instr2	::=	FunDef ;
+InnnerFunction.		Instr2	::=	FunDef ;
 _.			Instr	::=	Instr1 ;
 ReturnExpr.		Instr	::=	"return" ";" ;
 ReturnExprInstr.	Instr	::=	"return" Expr ";" ;
@@ -23,6 +23,7 @@ WhileLoop.		Instr	::=	"while" "(" Expr ")" Instr ;
 
 OnlyDeclarator.		Decl	::=	Ident ;
 InitDeclarator.		Decl	::=	Ident "=" Expr ;
+ArrayDeclarator.	Decl	::=	Ident "[" Expr "]" ;
 
 
 Assigment.		Expr	::=	Expr11 "=" Expr ;

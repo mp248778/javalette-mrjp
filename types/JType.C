@@ -1,4 +1,4 @@
-#include "include/JType.H"
+#include "JType.H"
 
 JInt::JInt() {}
 JBool::JBool() {}
@@ -95,10 +95,65 @@ bool JVoid::isVoid() const {
     return true;
 }
 
-bool JUnknownType::isInt() const { return true; }
-bool JUnknownType::isBool() const { return true; }
-bool JUnknownType::isString() const { return true; }
-bool JUnknownType::isDouble() const { return true; }
-bool JUnknownType::isVoid() const { return true; }
-bool JUnknownType::sameType(const JType*) const { return true; }
-JUnknownType* JType::clone() const { return new JUnknownType(); }
+bool JDouble::isNumeric() const {
+    return true;
+}
+
+bool JInt::isNumeric() const {
+    return true;
+}
+
+bool JUnknownType::isNumeric() const {
+    return true;
+}
+
+std::string JInt::toString() const {
+    return "int";
+}
+
+std::string JBool::toString() const {
+    return "bool";
+}
+
+std::string JDouble::toString() const {
+    return "double";
+}
+
+std::string JString::toString() const {
+    return "string";
+}
+
+std::string JVoid::toString() const {
+    return "void";
+}
+
+std::string JUnknownType::toString() const {
+    return "*unknown type*";
+}
+
+bool JUnknownType::isInt() const {
+    return true;
+}
+bool JUnknownType::isBool() const {
+    return true;
+}
+bool JUnknownType::isString() const {
+    return true;
+}
+bool JUnknownType::isDouble() const {
+    return true;
+}
+bool JUnknownType::isVoid() const {
+    return true;
+}
+bool JUnknownType::sameType(const JType*) const {
+    return true;
+}
+
+bool JType::isNumeric() const {
+    return false;
+}
+
+JType* JUnknownType::clone() const {
+    return new JUnknownType();
+}

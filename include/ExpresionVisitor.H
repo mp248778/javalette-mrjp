@@ -2,10 +2,10 @@
 #define EXPRESIONVISITOR_HEADER
 
 
-#include "include/Absyn.H"
-#include "include/SymbolTable.H"
-#include "include/Logger.H"
-#include "include/Symbol.H"
+#include "Absyn.H"
+#include "SymbolTable.H"
+#include "Logger.H"
+#include "Symbol.H"
 
 class ExpresionVisitor : public Visitor {
 private:
@@ -13,6 +13,11 @@ private:
     void _visitFunction(JFunction);
     Logger &logger;
     std::stack<JType*> types;
+    JType* _pop();
+    void numericBinaryOp(Expr*);
+    void comparisonOp(Expr*);
+    void numericComparisonOp(Expr*);
+    void booleanBinaryOp(Expr*);
 public:
     ExpresionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
