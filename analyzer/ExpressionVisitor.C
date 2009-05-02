@@ -1,25 +1,10 @@
 #include "ExpressionVisitor.H"
 
-/*void ExpressionVisitor::visitAssigment(Assigment *assigment) {
-    AssigmentVisitor av(st, logger);
-    assigment->accept(&av);
-
-    assigment->expr_1->accept(this);
-    assigment->expr_2->accept(this);
-    JType *type;
-    JType *t1 = _pop();
-    JType *t2 = _pop();
-    if (t1->sameType(t2)) {
-        type = t1->clone();
-    } else {
-        type = new JUnknownType();
-    }
-    types.push(type);
-    assigment->jtype_ = type;
-}*/
-
-
 ExpressionVisitor::ExpressionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
+
+ExpressionVisitor::~ExpressionVisitor() {
+    while(!types.empty()) delete _pop();
+}
 
 JType* ExpressionVisitor::_pop() {
     JType *t = types.top();
@@ -105,29 +90,55 @@ void ExpressionVisitor::visitListExpr(ListExpr* listexpr) {
 }
 
 void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
-    JType *t = _pop();
+    const JSymbol *s = st.lookup(postdecrement->ident_);
     JType *type;
-    if (t->isNumeric()) type = t->clone();
-    else {
-        logger.notANumeric(postdecrement);
+    if(!s) {
+        logger.undefined(postdecrement->ident_, postdecrement->line_number);
         type = new JUnknownType();
+    } else if(!s->isVariable()) {
+        logger.notAVariable(postdecrement->ident_, postdecrement->line_number);
+        type = new JUnknownType();
+    } else {
+        const JVariable* jv = static_cast<const JVariable*>(s);
+        if(!jv->getType()->isNumeric()) {
+            logger.notANumeric(postdecrement);
+            type = new JUnknownType();
+        } else if(!jv->alreadyInitialized()) {
+            logger.uninitializedValue(postdecrement->ident_, postdecrement->line_number);
+            type = new JUnknownType();
+        } else {
+            type = jv->getType()->clone();
+        }
     }
-    types.pop();
     types.push(type);
 }
 
 void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
-    JType *t = _pop();
+    const JSymbol *s = st.lookup(postincrement->ident_);
     JType *type;
-    if (t->isNumeric()) type = t->clone();
-    else {
-        logger.notANumeric(postincrement);
+    if(!s) {
+        logger.undefined(postincrement->ident_, postincrement->line_number);
         type = new JUnknownType();
+    } else if(!s->isVariable()) {
+        logger.notAVariable(postincrement->ident_, postincrement->line_number);
+        type = new JUnknownType();
+    } else {
+        const JVariable* jv = static_cast<const JVariable*>(s);
+        if(!jv->getType()->isNumeric()) {
+            logger.notANumeric(postincrement);
+            type = new JUnknownType();
+        } else if(!jv->alreadyInitialized()) {
+            logger.uninitializedValue(postincrement->ident_, postincrement->line_number);
+            type = new JUnknownType();
+        } else {
+            type = jv->getType()->clone();
+        }
     }
     types.push(type);
 }
 
 void ExpressionVisitor::visitCast(Cast *cast) {
+    cast->expr_->accept(this);
     cast->jtype_ = cast->type_->getJType();
     _pop();
     types.push(cast->jtype_);
@@ -275,7 +286,7 @@ void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
                 _pop();
         } else {
             for (int i = f->getArguments().size() - 1; i >= 0; i--) {
-                if (!f->getArguments()[i]->sameType(_pop()));
+                if (!f->getArguments()[i]->sameType(_pop()))
                     logger.notAType(functioncall->listexpr_->at(i), f->getArguments()[i]->toString());
             }
         }
@@ -284,7 +295,7 @@ void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
         for (int i = functioncall->listexpr_->size(); i > 0; i--)
             _pop();
         if (!s) {
-            logger.undefined(&functioncall->ident_, functioncall->line_number);
+            logger.undefined(functioncall->ident_, functioncall->line_number);
             type = new JUnknownType();
         } else {
         logger.notAFunction(functioncall);
@@ -301,7 +312,7 @@ void ExpressionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
     JType *type;
     JType *t = _pop();
     if (!s) {
-        logger.undefined(&arrayaccess->ident_, arrayaccess->line_number);
+        logger.undefined(arrayaccess->ident_, arrayaccess->line_number);
         type = new JUnknownType();
     } else if (!s->isArray()) {
         logger.notAnArray(arrayaccess->ident_, arrayaccess->line_number);
@@ -319,7 +330,7 @@ void ExpressionVisitor::visitIdentExpr(IdentExpr *identexpr) {
     const JSymbol *s = st.lookup(identexpr->ident_);
     JType *type;
     if (!s) {
-        logger.undefined(&identexpr->ident_, identexpr->line_number);
+        logger.undefined(identexpr->ident_, identexpr->line_number);
         type = new JUnknownType();
     } else if (!s->isVariable()) {
         logger.notAVariable(identexpr->ident_, identexpr->line_number);
@@ -327,7 +338,7 @@ void ExpressionVisitor::visitIdentExpr(IdentExpr *identexpr) {
     } else {
         const JVariable *jv = static_cast<const JVariable*>(s);
         if (!jv->alreadyInitialized())
-            logger.uninitializedValue(identexpr);
+            logger.uninitializedValue(identexpr->ident_, identexpr->line_number);
         type = jv->getType()->clone();
     }
     identexpr->jtype_ = type;
@@ -369,14 +380,15 @@ void ExpressionVisitor::visitIdentAssigment(IdentAssigment *p) {
     JType *t = _pop();
     JSymbol *s = st.lookup(p->ident_);
     if(!s) {
-        logger.undefined(&p->ident_, p->line_number);
+        logger.undefined(p->ident_, p->line_number);
         type = new JUnknownType();
     }
     else if(!s->isVariable()) {
         logger.notAVariable(p->ident_, p->line_number);
         type = new JUnknownType();
-    } else if (t->sameType(s->getType())) {
+    } else if (!t->sameType(s->getType())) {
         logger.notEqualTypes(p, t, s->getType());
+        type = new JUnknownType();
     } else {
         JVariable * jv = static_cast<JVariable*>(s);
         jv->initialize();
@@ -395,15 +407,15 @@ void ExpressionVisitor::visitArrayAssigment(ArrayAssigment *p) {
     JType *t1 = _pop();
     JType *t2 = _pop();
     if (!s) {
-        logger.undefined(&p->ident_, p->line_number);
+        logger.undefined(p->ident_, p->line_number);
         type = new JUnknownType();
     } else if (!s->isArray()) {
         logger.notAnArray(p->ident_, p->line_number);
         type = new JUnknownType();
-    } else if (!t1->isInt()) {
+    } else if (!t2->isInt()) {
         logger.notAType(p, "int");
         type = new JUnknownType();
-    } else if (!t2->sameType(s->getType())) {
+    } else if (!t1->sameType(s->getType())) {
         logger.notAType(p, s->getType()->toString());
         type = new JUnknownType();
     } else {

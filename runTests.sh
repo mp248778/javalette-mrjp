@@ -12,6 +12,7 @@ done
 echo "Bad :"
 for i in `ls examples/bad/*.jl`
 do
+	echo $i
 	./testJavalette < "$i" &> /dev/null
 	if [ `echo $?` -eq 0 ]
 	then

@@ -144,7 +144,7 @@ Type : _SYMB_30 {  $$ = new IntType(); $$->line_number = yy_mylinenumber;  }
 Arg : Type _IDENT_ {  $$ = new FunctionArg($1, $2); $$->line_number = yy_mylinenumber;  } 
 ;
 Instr1 : _SYMB_2 ListInstr2 _SYMB_3 {  $$ = new CompoundInstr($2); $$->line_number = yy_mylinenumber;  } 
-   | error { $$ = new CompoundInstr(NULL); $$->line_number = yy_mylinenumber; }
+   | error { $$ = new CompoundInstr(NULL); $$->line_number = yy_mylinenumber; *jerror = 1; }
 ;
 Instr2 : Instr {  $$ = $1;  } 
   | FunDef {  $$ = new InnerFunction($1); $$->line_number = yy_mylinenumber;  }
@@ -171,8 +171,9 @@ Expr : _IDENT_ _SYMB_5 Expr {  $$ = new IdentAssigment($1, $3); $$->line_number 
 Expr1 : _IDENT_ _SYMB_8 {  $$ = new PostDecrement($1); $$->line_number = yy_mylinenumber;  } 
   | _IDENT_ _SYMB_9 {  $$ = new PostIncrement($1); $$->line_number = yy_mylinenumber;  }
   | Expr2 {  $$ = $1;  }
+
 ;
-Expr2 : _SYMB_0 Type _SYMB_1 {  $$ = new Cast($2); $$->line_number = yy_mylinenumber;  } 
+Expr2 : _SYMB_0 Type _SYMB_1 Expr11 {  $$ = new Cast($2, $4); $$->line_number = yy_mylinenumber;  }
   | Expr3 {  $$ = $1;  }
 ;
 Expr3 : Expr3 _SYMB_10 Expr4 {  $$ = new LogExprOr($1, $3); $$->line_number = yy_mylinenumber;  } 

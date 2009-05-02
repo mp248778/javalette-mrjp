@@ -19,6 +19,7 @@ private:
     void numericComparisonOp(Expr*);
     void booleanBinaryOp(Expr*);
 public:
+    ~ExpressionVisitor();
     ExpressionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);

@@ -28,6 +28,9 @@ void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     initdeclarator->expr_->accept(&ev);
     JVariable *jv = new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number);
     jv->initialize();
+    if(!initdeclarator->expr_->jtype_->sameType(jv->getType())) {
+        logger.notEqualTypes(initdeclarator->expr_, initdeclarator->expr_->jtype_, jv->getType());
+    }
     _visitDeclaration(jv);
 }
 

@@ -26,10 +26,11 @@ InitDeclarator.		Decl	::=	Ident "=" Expr ;
 ArrayDeclarator.	Decl	::=	Ident "[" Expr "]" ;
 
 
-Assigment.		Expr	::=	Expr11 "=" Expr ;
+IdentAssigment.		Expr	::=	Ident "=" Expr ;
+ArrayAssigment.		Expr	::=	Ident "[" Expr "]" "=" Expr ;
 PostDecrement.		Expr1	::=	Ident "--" ;
 PostIncrement.		Expr1	::=	Ident "++" ;
-Cast.			Expr2	::=	"(" Type ")" ;
+Cast.			Expr2	::=	"(" Type ")" Expr11 ;
 LogExprOr.		Expr3	::=	Expr3 "||" Expr4 ;
 LogExprAnd.		Expr4	::=	Expr4 "&&" Expr5 ;
 LogExprEq.		Expr5	::=	Expr5 "==" Expr6 ;

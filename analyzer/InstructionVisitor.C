@@ -105,6 +105,7 @@ void InstructionVisitor::visitListArg(ListArg* listarg) {
 
 void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
     JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
+    jv->initialize();
     if (st.definedInCurrentScope(jv->getName())) {
         logger.alreadyDefined(jv, st.lookup(jv->getName()));
         delete jv;

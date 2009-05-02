@@ -452,6 +452,7 @@ void PrintAbsyn::visitCast(Cast* p)
   render('(');
   _i_ = 0; p->type_->accept(this);
   render(')');
+  _i_ = 11; p->expr_->accept(this);
 
   if (oldi > 2) render(_R_PAREN);
 
@@ -1159,6 +1160,9 @@ void ShowAbsyn::visitCast(Cast* p)
   if (p->type_)  p->type_->accept(this);
   bufAppend(']');
   bufAppend(' ');
+  bufAppend('[');
+  if (p->expr_)  p->expr_->accept(this);
+  bufAppend(']');
   bufAppend(')');
 }
 void ShowAbsyn::visitLogExprOr(LogExprOr* p)

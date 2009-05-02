@@ -16,8 +16,8 @@ void Logger::alreadyDefined(const JSymbol *jnew, const JSymbol *jold) {
     fatal = true;
 }
 
-void Logger::undefined(const Ident *i, int line_number) {
-    std::cerr << ":" << line_number << ": " << *i << " is undefined\n";
+void Logger::undefined(const std::string& ident, int line_number) {
+    std::cerr << ":" << line_number << ": " << ident << " is undefined\n";
     fatal = true;
 }
 
@@ -28,10 +28,12 @@ void Logger::notAType(const Expr *e, std::string type) {
 
 void Logger::notANumeric(const Expr *e) {
     notAType(e, "int or double");
+    fatal = true;
 }
 
 void Logger::notEqualTypes(const Expr *e, const JType *t1, const JType *t2) {
     std::cerr << ":" << e->line_number << ": expression types do not match, got " << t1->toString() << " and " << t2->toString() << "\n";
+    fatal = true;
 }
 
 void Logger::badAmountOfArguments(const FunctionCall *fc) {
@@ -46,18 +48,22 @@ void Logger::notAnArray(const std::string &ident_, int line_number) {
 
 void Logger::notAFunction(const FunctionCall *fc) {
     std::cerr << ":" << fc->line_number << ": " << fc->ident_ << " is not declared as a function\n";
+    fatal = true;
 }
 
 void Logger::notAVariable(const std::string ident_, int line_number) {
     std::cerr << ":" << line_number << ": " << ident_ << " is not declared as a variable\n";
+    fatal = true;
 }
 
 void Logger::notAComparable(const JType *t1, const JType *t2, int line_number) {
     std::cerr << ":" << line_number << ": " << t1->toString() << " type is not comparable with " << t2->toString() << "\n";
+    fatal = true;
 }
 
-void Logger::uninitializedValue(const IdentExpr *ie) {
-    std::cerr << ":" << ie->line_number << ": " << ie->ident_ << " variable is used before initialization\n";
+void Logger::uninitializedValue(const std::string& ident, int line_number) {
+    std::cerr << ":" << line_number << ": " << ident << " variable is used before initialization\n";
+    fatal = true;
 }
 
 Logger::Logger() {

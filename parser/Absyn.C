@@ -162,7 +162,6 @@ JType* DoubleType::getJType() const {
     return new JDouble();
 }
 
-
 DoubleType &DoubleType::operator=(const DoubleType & other)
 {
   DoubleType tmp(other);
@@ -1117,15 +1116,17 @@ PostIncrement *PostIncrement::clone() const
 
 
 /********************   Cast    ********************/
-Cast::Cast(Type *p1)
+Cast::Cast(Type *p1, Expr *p2)
 {
   type_ = p1;
+  expr_ = p2;
 
 }
 
 Cast::Cast(const Cast & other)
 {
   type_ = other.type_->clone();
+  expr_ = other.expr_->clone();
 
 }
 
@@ -1139,12 +1140,14 @@ Cast &Cast::operator=(const Cast & other)
 void Cast::swap(Cast & other)
 {
   std::swap(type_, other.type_);
+  std::swap(expr_, other.expr_);
 
 }
 
 Cast::~Cast()
 {
   delete(type_);
+  delete(expr_);
 
 }
 

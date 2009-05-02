@@ -1,0 +1,5 @@
+int main()
+{
+	double a[4];
+	a[3] = (double)((int)3.0);
+}
