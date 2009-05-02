@@ -17,6 +17,7 @@ public:
     int getLine() const;
     virtual bool isFunction() const;
     virtual bool isVariable() const;
+    virtual bool isArray() const;
     virtual JType const * getType() const = 0;
     virtual ~JSymbol() = 0;
 };
@@ -30,9 +31,8 @@ public:
     JFunction(const std::string&, JType*, std::vector<JType*>);
     JFunction(const Function*, std::vector<JType*>&);
     const std::vector<JType*>& getArguments() const;
-    virtual bool isFunction() const;
+    bool isFunction() const;
     JType const * getType() const;
-    void operator=(const JFunction&);
     ~JFunction();
 };
 
@@ -43,13 +43,22 @@ private:
 public:
     JVariable(JType *, std::string, int line_number);
     JVariable(const JVariable&);
-    JVariable(const std::string&, JType*);
-    virtual bool isVariable() const;
+    bool isVariable() const;
     JType const * getType() const;
-    void operator=(const JVariable&);
     void initialized();
     bool alreadyInitialized() const;
     ~JVariable();
+};
+
+class JArray : public JSymbol {
+private:
+    JType *type;
+public:
+    JArray(JType*, std::string, int);
+    JArray(const JArray&);
+    bool isArray() const;
+    JType const * getType() const;
+    ~JArray();
 };
 
 #endif

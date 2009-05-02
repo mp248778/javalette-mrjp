@@ -17,23 +17,24 @@ class ListArg;
 class ListDecl;
 class ListExpr;
 
-typedef union {
-    int int_;
-    char char_;
-    double double_;
-    char* string_;
-    Prog* prog_;
-    FunDef* fundef_;
-    Type* type_;
-    Arg* arg_;
-    Instr* instr_;
-    Decl* decl_;
-    Expr* expr_;
-    Literal* literal_;
-    ListFunDef* listfundef_;
-    ListArg* listarg_;
-    ListDecl* listdecl_;
-    ListExpr* listexpr_;
+typedef union
+{
+  int int_;
+  char char_;
+  double double_;
+  char* string_;
+  Prog* prog_;
+  FunDef* fundef_;
+  Type* type_;
+  Arg* arg_;
+  Instr* instr_;
+  Decl* decl_;
+  Expr* expr_;
+  Literal* literal_;
+  ListFunDef* listfundef_;
+  ListArg* listarg_;
+  ListDecl* listdecl_;
+  ListExpr* listexpr_;
 } YYSTYPE;
 
 #define _ERROR_ 258

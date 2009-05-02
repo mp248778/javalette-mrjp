@@ -8,16 +8,16 @@ BoolType.		Type	::=	"boolean" ;
 
 FunctionArg.		Arg	::=	Type Ident ;
 
-CompundInstr.		Instr1	::=	"{" [Instr2] "}" ;
+CompoundInstr.		Instr1	::=	"{" [Instr2] "}" ;
 _.			Instr2	::=	Instr ;
-InnnerFunction.		Instr2	::=	FunDef ;
+InnerFunction.		Instr2	::=	FunDef ;
 _.			Instr	::=	Instr1 ;
-ReturnExpr.		Instr	::=	"return" ";" ;
+ReturnInstr.		Instr	::=	"return" ";" ;
 ReturnExprInstr.	Instr	::=	"return" Expr ";" ;
 DeclInstr.		Instr	::=	Type [Decl] ";" ;
 ConditionalIf.		Instr	::=	"if" "(" Expr ")" Instr;
 ConditionalIfElse.	Instr	::=	"if" "(" Expr ")" Instr "else" Instr ;
-ExpresionInstr.		Instr	::=	Expr ";" ;
+ExpressionInstr.	Instr	::=	Expr ";" ;
 ForLoop.		Instr	::=	"for" "(" Decl ";" Expr ";" Expr ")" Instr ;
 WhileLoop.		Instr	::=	"while" "(" Expr ")" Instr ;
 
@@ -65,7 +65,6 @@ separator		Arg 		"," ;
 separator		Instr2		"" ;
 separator nonempty	Decl		"," ;
 separator		Expr		"," ;
--- separator nonempty	Assigment	"=" ;
 
 
 comment			"//" ;

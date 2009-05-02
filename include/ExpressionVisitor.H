@@ -7,7 +7,7 @@
 #include "Logger.H"
 #include "Symbol.H"
 
-class ExpresionVisitor : public Visitor {
+class ExpressionVisitor : public Visitor {
 private:
     SymbolTable<std::string, JSymbol> &st;
     void _visitFunction(JFunction);
@@ -19,7 +19,7 @@ private:
     void numericComparisonOp(Expr*);
     void booleanBinaryOp(Expr*);
 public:
-    ExpresionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
+    ExpressionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);
     void visitType(Type* p);
@@ -35,14 +35,14 @@ public:
     void visitVoidType(VoidType* p);
     void visitBoolType(BoolType* p);
     void visitFunctionArg(FunctionArg* p);
-    void visitCompundInstr(CompundInstr* p);
+    void visitCompoundInstr(CompoundInstr* p);
     void visitInnerFunction(InnerFunction* p);
-    void visitReturnExpr(ReturnExpr* p);
+    void visitReturnInstr(ReturnInstr* p);
     void visitReturnExprInstr(ReturnExprInstr* p);
     void visitDeclInstr(DeclInstr* p);
     void visitConditionalIf(ConditionalIf* p);
     void visitConditionalIfElse(ConditionalIfElse* p);
-    void visitExpresionInstr(ExpresionInstr* p);
+    void visitExpressionInstr(ExpressionInstr* p);
     void visitForLoop(ForLoop* p);
     void visitWhileLoop(WhileLoop* p);
     void visitOnlyDeclarator(OnlyDeclarator* p);
@@ -80,7 +80,7 @@ public:
     void visitListInstr(ListInstr* p);
     void visitListDecl(ListDecl* p);
     void visitListExpr(ListExpr* p);
-
+    void visitArrayDeclarator(ArrayDeclarator *p);
     void visitBoolean(Boolean x);
     void visitInteger(Integer x);
     void visitChar(Char x);

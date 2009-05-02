@@ -1,14 +1,15 @@
-#include "ExpresionVisitor.H"
+#include "ExpressionVisitor.H"
 
-ExpresionVisitor::ExpresionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
-JType* ExpresionVisitor::_pop() {
+ExpressionVisitor::ExpressionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
+
+JType* ExpressionVisitor::_pop() {
     JType *t = types.top();
     types.pop();
     return t;
 }
 
-void ExpresionVisitor::numericBinaryOp(Expr *e) {
+void ExpressionVisitor::numericBinaryOp(Expr *e) {
     JType *type;
     JType *t1 = _pop();
     JType *t2 = _pop();
@@ -27,7 +28,7 @@ void ExpresionVisitor::numericBinaryOp(Expr *e) {
     e->jtype_ = type;
 }
 
-void ExpresionVisitor::comparisonOp(Expr *e) {
+void ExpressionVisitor::comparisonOp(Expr *e) {
     JType *type;
     JType *t1 = _pop();
     JType *t2 = _pop();
@@ -46,7 +47,7 @@ void ExpresionVisitor::comparisonOp(Expr *e) {
     e->jtype_ = type;
 }
 
-void ExpresionVisitor::numericComparisonOp(Expr *e) {
+void ExpressionVisitor::numericComparisonOp(Expr *e) {
     JType *type;
     JType *t1 = _pop();
     JType *t2 = _pop();
@@ -65,7 +66,7 @@ void ExpresionVisitor::numericComparisonOp(Expr *e) {
     e->jtype_ = type;
 }
 
-void ExpresionVisitor::booleanBinaryOp(Expr *e) {
+void ExpressionVisitor::booleanBinaryOp(Expr *e) {
     JType *type;
     JType *t1 = _pop();
     JType *t2 = _pop();
@@ -79,13 +80,16 @@ void ExpresionVisitor::booleanBinaryOp(Expr *e) {
     e->jtype_ = type;
 }
 
-void ExpresionVisitor::visitListExpr(ListExpr* listexpr) {
+void ExpressionVisitor::visitListExpr(ListExpr* listexpr) {
     for (ListExpr::iterator i = listexpr->begin() ; i != listexpr->end() ; ++i) {
         (*i)->accept(this);
     }
 }
 
-void ExpresionVisitor::visitAssigment(Assigment *assigment) {
+void ExpressionVisitor::visitAssigment(Assigment *assigment) {
+    AssigmentVisitor av(st, logger);
+    assigment->accept(&av);
+
     assigment->expr_1->accept(this);
     assigment->expr_2->accept(this);
     JType *type;
@@ -100,7 +104,7 @@ void ExpresionVisitor::visitAssigment(Assigment *assigment) {
     assigment->jtype_ = type;
 }
 
-void ExpresionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
+void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
     JType *t = _pop();
     JType *type;
     if (t->isNumeric()) type = t->clone();
@@ -112,7 +116,7 @@ void ExpresionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitPostIncrement(PostIncrement *postincrement) {
+void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
     JType *t = _pop();
     JType *type;
     if (t->isNumeric()) type = t->clone();
@@ -123,85 +127,85 @@ void ExpresionVisitor::visitPostIncrement(PostIncrement *postincrement) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitCast(Cast *cast) {
+void ExpressionVisitor::visitCast(Cast *cast) {
     cast->jtype_ = cast->type_->getJType();
     _pop();
     types.push(cast->jtype_);
 }
 
-void ExpresionVisitor::visitLogExprOr(LogExprOr *logexpror) {
+void ExpressionVisitor::visitLogExprOr(LogExprOr *logexpror) {
     logexpror->expr_1->accept(this);
     logexpror->expr_2->accept(this);
     booleanBinaryOp(logexpror);
 }
 
-void ExpresionVisitor::visitLogExprAnd(LogExprAnd *logexprand) {
+void ExpressionVisitor::visitLogExprAnd(LogExprAnd *logexprand) {
     logexprand->expr_1->accept(this);
     logexprand->expr_2->accept(this);
     booleanBinaryOp(logexprand);
 }
 
-void ExpresionVisitor::visitLogExprEq(LogExprEq *logexpreq) {
+void ExpressionVisitor::visitLogExprEq(LogExprEq *logexpreq) {
     logexpreq->expr_1->accept(this);
     logexpreq->expr_2->accept(this);
     comparisonOp(logexpreq);
 }
 
-void ExpresionVisitor::visitLogExprNeq(LogExprNeq *logexprneq) {
+void ExpressionVisitor::visitLogExprNeq(LogExprNeq *logexprneq) {
     logexprneq->expr_1->accept(this);
     logexprneq->expr_2->accept(this);
     comparisonOp(logexprneq);
 }
 
-void ExpresionVisitor::visitRelExprL(RelExprL *relexprl) {
+void ExpressionVisitor::visitRelExprL(RelExprL *relexprl) {
     relexprl->expr_1->accept(this);
     relexprl->expr_2->accept(this);
     numericComparisonOp(relexprl);
 }
 
-void ExpresionVisitor::visitRelExprG(RelExprG *relexprg) {
+void ExpressionVisitor::visitRelExprG(RelExprG *relexprg) {
     relexprg->expr_1->accept(this);
     relexprg->expr_2->accept(this);
     numericComparisonOp(relexprg);
 }
 
-void ExpresionVisitor::visitRelExprLe(RelExprLe *relexprle) {
+void ExpressionVisitor::visitRelExprLe(RelExprLe *relexprle) {
     relexprle->expr_1->accept(this);
     relexprle->expr_2->accept(this);
     numericComparisonOp(relexprle);
 }
 
-void ExpresionVisitor::visitRelExprGe(RelExprGe *relexprge) {
+void ExpressionVisitor::visitRelExprGe(RelExprGe *relexprge) {
     relexprge->expr_1->accept(this);
     relexprge->expr_2->accept(this);
     numericComparisonOp(relexprge);
 }
 
-void ExpresionVisitor::visitAddExpr(AddExpr *addexpr) {
+void ExpressionVisitor::visitAddExpr(AddExpr *addexpr) {
     addexpr->expr_1->accept(this);
     addexpr->expr_2->accept(this);
     numericBinaryOp(addexpr);
 }
 
-void ExpresionVisitor::visitDecExpr(DecExpr *decexpr) {
+void ExpressionVisitor::visitDecExpr(DecExpr *decexpr) {
     decexpr->expr_1->accept(this);
     decexpr->expr_2->accept(this);
     numericBinaryOp(decexpr);
 }
 
-void ExpresionVisitor::visitMulExpr(MulExpr *mulexpr) {
+void ExpressionVisitor::visitMulExpr(MulExpr *mulexpr) {
     mulexpr->expr_1->accept(this);
     mulexpr->expr_2->accept(this);
     numericBinaryOp(mulexpr);
 }
 
-void ExpresionVisitor::visitDivExpr(DivExpr *divexpr) {
+void ExpressionVisitor::visitDivExpr(DivExpr *divexpr) {
     divexpr->expr_1->accept(this);
     divexpr->expr_2->accept(this);
     numericBinaryOp(divexpr);
 }
 
-void ExpresionVisitor::visitModExpr(ModExpr *modexpr) {
+void ExpressionVisitor::visitModExpr(ModExpr *modexpr) {
     modexpr->expr_1->accept(this);
     modexpr->expr_2->accept(this);
     JType *t1 = _pop();
@@ -217,7 +221,7 @@ void ExpresionVisitor::visitModExpr(ModExpr *modexpr) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitNegExpr(NegExpr *negexpr) {
+void ExpressionVisitor::visitNegExpr(NegExpr *negexpr) {
     negexpr->expr_->accept(this);
     JType *t1 = _pop();
     JType *type;
@@ -231,7 +235,7 @@ void ExpresionVisitor::visitNegExpr(NegExpr *negexpr) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitPlusExpr(PlusExpr *plusexpr) {
+void ExpressionVisitor::visitPlusExpr(PlusExpr *plusexpr) {
     plusexpr->expr_->accept(this);
     JType *t1 = _pop();
     JType *type;
@@ -245,7 +249,7 @@ void ExpresionVisitor::visitPlusExpr(PlusExpr *plusexpr) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
+void ExpressionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
     minusexpr->expr_->accept(this);
     JType *t1 = _pop();
     JType *type;
@@ -259,7 +263,7 @@ void ExpresionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitFunctionCall(FunctionCall *functioncall) {
+void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
     JType *type;
     functioncall->listexpr_->accept(this);
     const JSymbol *s = st.lookup(functioncall->ident_);
@@ -291,8 +295,9 @@ void ExpresionVisitor::visitFunctionCall(FunctionCall *functioncall) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
-    /*const JSymbol *s = st.lookup(arrayaccess->ident_);
+void ExpressionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
+    arrayaccess->expr_->accept(this);
+    const JSymbol *s = st.lookup(arrayaccess->ident_);
     JType *type;
     JType *t = _pop();
     if (!s) {
@@ -306,12 +311,11 @@ void ExpresionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
     } else {
         type = s->getType()->clone();
     }
-    arrayaccess->expr_->accept(this);
     arrayaccess->jtype_ = type;
-    types.push(type);*/
+    types.push(type);
 }
 
-void ExpresionVisitor::visitIdentExpr(IdentExpr *identexpr) {
+void ExpressionVisitor::visitIdentExpr(IdentExpr *identexpr) {
     const JSymbol *s = st.lookup(identexpr->ident_);
     JType *type;
     if (!s) {
@@ -330,30 +334,30 @@ void ExpresionVisitor::visitIdentExpr(IdentExpr *identexpr) {
     types.push(type);
 }
 
-void ExpresionVisitor::visitLiteralExpr(LiteralExpr *literalexpr) {
+void ExpressionVisitor::visitLiteralExpr(LiteralExpr *literalexpr) {
     literalexpr->literal_->accept(this);
     literalexpr->jtype_ = types.top()->clone();
 }
 
-void ExpresionVisitor::visitLiteralInteger(LiteralInteger *literalinteger) {
+void ExpressionVisitor::visitLiteralInteger(LiteralInteger *literalinteger) {
     JType *type = new JInt();
     literalinteger->jtype_ = type;
     types.push(type);
 }
 
-void ExpresionVisitor::visitLiteralDouble(LiteralDouble *literaldouble) {
+void ExpressionVisitor::visitLiteralDouble(LiteralDouble *literaldouble) {
     JType *type = new JDouble();
     literaldouble->jtype_ = type;
     types.push(type);
 }
 
-void ExpresionVisitor::visitLiteralString(LiteralString *literalstring) {
+void ExpressionVisitor::visitLiteralString(LiteralString *literalstring) {
     JType *type = new JString();
     literalstring->jtype_ = type;
     types.push(type);
 }
 
-void ExpresionVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
+void ExpressionVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
     JType *type = new JBool();
     literalboolean->jtype_ = type;
     types.push(type);
@@ -365,150 +369,154 @@ void ExpresionVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
 
-void ExpresionVisitor::visitBoolean(Boolean x) {
+void ExpressionVisitor::visitArrayDeclarator(ArrayDeclarator *p) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitInteger(Integer x) {
+void ExpressionVisitor::visitBoolean(Boolean x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitDouble(Double x) {
+void ExpressionVisitor::visitInteger(Integer x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitString(String x) {
+void ExpressionVisitor::visitDouble(Double x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitChar(Char x) {
+void ExpressionVisitor::visitString(String x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitIdent(Ident x) {
+void ExpressionVisitor::visitChar(Char x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitFunction(Function *function) {
+void ExpressionVisitor::visitIdent(Ident x) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitFunctionArg(FunctionArg *functionarg) {
+void ExpressionVisitor::visitFunction(Function *function) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitCompundInstr(CompundInstr *compundinstr) {
+void ExpressionVisitor::visitFunctionArg(FunctionArg *functionarg) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
+void ExpressionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitListFunDef(ListFunDef* listfundef) {
+void ExpressionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitListArg(ListArg* listarg) {
+void ExpressionVisitor::visitListFunDef(ListFunDef* listfundef) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitListInstr(ListInstr* listinstr) {
+void ExpressionVisitor::visitListArg(ListArg* listarg) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitProg(Prog* t) {
+void ExpressionVisitor::visitListInstr(ListInstr* listinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void ExpressionVisitor::visitProg(Prog* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitFunDef(FunDef* t) {
+void ExpressionVisitor::visitFunDef(FunDef* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitType(Type* t) {
+void ExpressionVisitor::visitType(Type* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitArg(Arg* t) {
+void ExpressionVisitor::visitArg(Arg* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitInstr(Instr* t) {
+void ExpressionVisitor::visitInstr(Instr* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitDecl(Decl* t) {
+void ExpressionVisitor::visitDecl(Decl* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitExpr(Expr* t) {
+void ExpressionVisitor::visitExpr(Expr* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitLiteral(Literal* t) {
+void ExpressionVisitor::visitLiteral(Literal* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class
 }
 
-void ExpresionVisitor::visitProgram(Program *program) {
+void ExpressionVisitor::visitProgram(Program *program) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitIntType(IntType *inttype) {
+void ExpressionVisitor::visitIntType(IntType *inttype) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitDoubleType(DoubleType *doubletype) {
+void ExpressionVisitor::visitDoubleType(DoubleType *doubletype) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitVoidType(VoidType *voidtype) {
+void ExpressionVisitor::visitVoidType(VoidType *voidtype) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitBoolType(BoolType *booltype) {
+void ExpressionVisitor::visitBoolType(BoolType *booltype) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
+void ExpressionVisitor::visitReturnInstr(ReturnInstr *returnexpr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
+void ExpressionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitDeclInstr(DeclInstr *declinstr) {
+void ExpressionVisitor::visitDeclInstr(DeclInstr *declinstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
+void ExpressionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
+void ExpressionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
+void ExpressionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitForLoop(ForLoop *forloop) {
+void ExpressionVisitor::visitForLoop(ForLoop *forloop) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitWhileLoop(WhileLoop *whileloop) {
+void ExpressionVisitor::visitWhileLoop(WhileLoop *whileloop) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
+void ExpressionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
+void ExpressionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void ExpresionVisitor::visitListDecl(ListDecl* listdecl) {
+void ExpressionVisitor::visitListDecl(ListDecl* listdecl) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }

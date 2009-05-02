@@ -1,6 +1,6 @@
 #include "InstructionVisitor.H"
 #include "FunctionVisitor.H"
-#include "ExpresionVisitor.H"
+#include "ExpressionVisitor.H"
 #include "DeclarationVisitor.H"
 
 InstructionVisitor::InstructionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
@@ -30,14 +30,14 @@ void InstructionVisitor::visitProgram(Program *program) {
     st.delScope();
 }
 
-void InstructionVisitor::visitCompundInstr(CompundInstr *compundinstr) {
+void InstructionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
     st.newScope();
     compundinstr->listinstr_->accept(this);
     st.delScope();
 }
 
 void InstructionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     returnexprinstr->expr_->accept(&ev);
 }
 
@@ -47,14 +47,13 @@ void InstructionVisitor::visitDeclInstr(DeclInstr *declinstr) {
 }
 
 void InstructionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     conditionalif->expr_->accept(&ev);
-
     conditionalif->instr_->accept(this);
 }
 
 void InstructionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     conditionalifelse->expr_->accept(&ev);
 
     conditionalifelse->instr_1->accept(this);
@@ -62,31 +61,31 @@ void InstructionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalif
 
 }
 
-void InstructionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
-    ExpresionVisitor ev(st, logger);
-    expresioninstr->expr_->accept(&ev);
+void InstructionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
+    ExpressionVisitor ev(st, logger);
+    expressioninstr->expr_->accept(&ev);
 }
 
 void InstructionVisitor::visitForLoop(ForLoop *forloop) {
     DeclarationVisitor dv(st, logger);
     forloop->decl_->accept(&dv);
 
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     forloop->expr_1->accept(&ev);
-    ExpresionVisitor ev2(st, logger);
+    ExpressionVisitor ev2(st, logger);
     forloop->expr_2->accept(&ev2);
 
     forloop->instr_->accept(this);
 }
 
 void InstructionVisitor::visitWhileLoop(WhileLoop *whileloop) {
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     whileloop->expr_->accept(&ev);
     whileloop->instr_->accept(this);
 
 }
 
-void InstructionVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
+void InstructionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
 }
 
 void InstructionVisitor::visitFunction(Function *function) {
@@ -115,6 +114,10 @@ void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
 /******************************************************************************
 NOTHING MORE INTERESING
 ******************************************************************************/
+
+void InstructionVisitor::visitArrayDeclarator(ArrayDeclarator *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
 void InstructionVisitor::visitProg(Prog* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class

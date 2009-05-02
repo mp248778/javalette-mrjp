@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Release" />
+	<ActiveTarget name="Debug" />
 	<File name="../Printer.C" open="0" top="0" tabpos="10">
 		<Cursor position="96" topLine="3" />
 	</File>
 	<File name="../Test.C" open="0" top="0" tabpos="6">
-		<Cursor position="660" topLine="0" />
+		<Cursor position="1486" topLine="0" />
 	</File>
-	<File name="../analyzer/DeclarationVisitor.C" open="0" top="0" tabpos="1">
-		<Cursor position="42" topLine="0" />
+	<File name="../analyzer/AssigmentVisitor.C" open="0" top="0" tabpos="0">
+		<Cursor position="6" topLine="0" />
+	</File>
+	<File name="../analyzer/DeclarationVisitor.C" open="0" top="0" tabpos="10">
+		<Cursor position="955" topLine="2" />
 	</File>
 	<File name="../analyzer/ExpresionVisitor.C" open="1" top="1" tabpos="1">
-		<Cursor position="150" topLine="0" />
+		<Cursor position="14033" topLine="466" />
 	</File>
-	<File name="../analyzer/FunctionVisitor.C" open="0" top="0" tabpos="3">
-		<Cursor position="10" topLine="0" />
+	<File name="../analyzer/FunctionVisitor.C" open="0" top="0" tabpos="11">
+		<Cursor position="1524" topLine="14" />
 	</File>
-	<File name="../analyzer/InstructionVisitor.C" open="0" top="0" tabpos="2">
-		<Cursor position="101" topLine="0" />
+	<File name="../analyzer/InstructionVisitor.C" open="0" top="0" tabpos="12">
+		<Cursor position="3655" topLine="68" />
 	</File>
 	<File name="../analyzer/Stdfunc.C" open="0" top="0" tabpos="3">
 		<Cursor position="10" topLine="0" />
 	</File>
-	<File name="../include/Absyn.H" open="0" top="0" tabpos="2">
-		<Cursor position="87" topLine="5" />
+	<File name="../include/Absyn.H" open="0" top="0" tabpos="3">
+		<Cursor position="2965" topLine="92" />
 	</File>
-	<File name="../include/DeclarationVisitor.H" open="0" top="0" tabpos="0">
-		<Cursor position="123" topLine="3" />
+	<File name="../include/DeclarationVisitor.H" open="0" top="0" tabpos="13">
+		<Cursor position="2811" topLine="26" />
 	</File>
-	<File name="../include/ExpresionVisitor.H" open="0" top="0" tabpos="2">
-		<Cursor position="140" topLine="0" />
+	<File name="../include/ExpresionVisitor.H" open="1" top="0" tabpos="2">
+		<Cursor position="2978" topLine="37" />
 	</File>
-	<File name="../include/FunctionVisitor.H" open="0" top="0" tabpos="0">
-		<Cursor position="138" topLine="0" />
+	<File name="../include/FunctionVisitor.H" open="0" top="0" tabpos="15">
+		<Cursor position="949" topLine="0" />
 	</File>
-	<File name="../include/InstructionVisitor.H" open="0" top="0" tabpos="0">
-		<Cursor position="190" topLine="4" />
+	<File name="../include/InstructionVisitor.H" open="0" top="0" tabpos="9">
+		<Cursor position="2814" topLine="33" />
 	</File>
-	<File name="../include/JType.H" open="0" top="0" tabpos="3">
-		<Cursor position="1414" topLine="21" />
+	<File name="../include/JType.H" open="0" top="0" tabpos="7">
+		<Cursor position="62" topLine="0" />
 	</File>
-	<File name="../include/Logger.H" open="0" top="0" tabpos="7">
-		<Cursor position="55" topLine="0" />
+	<File name="../include/Logger.H" open="0" top="0" tabpos="4">
+		<Cursor position="718" topLine="0" />
 	</File>
 	<File name="../include/Parser.H" open="0" top="0" tabpos="1">
 		<Cursor position="682" topLine="22" />
@@ -50,7 +53,7 @@
 		<Cursor position="82" topLine="0" />
 	</File>
 	<File name="../include/Symbol.H" open="0" top="0" tabpos="6">
-		<Cursor position="110" topLine="0" />
+		<Cursor position="695" topLine="0" />
 	</File>
 	<File name="../include/SymbolTable.H" open="0" top="0" tabpos="5">
 		<Cursor position="1334" topLine="38" />
@@ -58,19 +61,19 @@
 	<File name="../lexer/Lexer.C" open="0" top="0" tabpos="4">
 		<Cursor position="18526" topLine="512" />
 	</File>
-	<File name="../logger/Logger.C" open="0" top="0" tabpos="8">
-		<Cursor position="50" topLine="0" />
+	<File name="../logger/Logger.C" open="0" top="0" tabpos="5">
+		<Cursor position="2221" topLine="16" />
 	</File>
 	<File name="../parser/Absyn.C" open="0" top="0" tabpos="5">
-		<Cursor position="156" topLine="0" />
+		<Cursor position="4071" topLine="246" />
 	</File>
-	<File name="../parser/Parser.C" open="0" top="0" tabpos="4">
-		<Cursor position="4358" topLine="110" />
+	<File name="../parser/Parser.C" open="0" top="0" tabpos="16">
+		<Cursor position="52268" topLine="1558" />
 	</File>
-	<File name="../symboltable/Symbol.C" open="0" top="0" tabpos="5">
-		<Cursor position="10" topLine="0" />
+	<File name="../symboltable/Symbol.C" open="0" top="0" tabpos="1">
+		<Cursor position="1127" topLine="31" />
 	</File>
-	<File name="../types/JType.C" open="0" top="0" tabpos="1">
-		<Cursor position="10" topLine="0" />
+	<File name="../types/JType.C" open="0" top="0" tabpos="8">
+		<Cursor position="2471" topLine="106" />
 	</File>
 </CodeBlocks_layout_file>

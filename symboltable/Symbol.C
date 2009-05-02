@@ -20,6 +20,10 @@ bool JSymbol::isVariable() const {
     return false;
 }
 
+bool JSymbol::isArray() const {
+    return false;
+}
+
 JFunction::JFunction(const std::string &name, JType *rettype, std::vector<JType*> listarg) {
     this->name = name;
     this->rettype = rettype;
@@ -34,11 +38,6 @@ JFunction::JFunction(const Function *f, std::vector<JType*> &listarg) {
 }
 
 JFunction::JFunction(const JFunction& other) {
-    listarg = other.listarg;
-    name = other.name;
-}
-
-void JFunction::operator=(const JFunction& other) {
     listarg = other.listarg;
     name = other.name;
 }
@@ -68,17 +67,12 @@ JVariable::JVariable(JType *t, std::string name, int line_number) {
     used = false;
 }
 
-JVariable::JVariable(const std::string &name, JType *type) {
+/*JVariable::JVariable(const std::string &name, JType *type) {
     this->name = name;
     this->type = type;
-}
+}*/
 
 JVariable::JVariable(const JVariable & other) {
-    name = other.name;
-    type = other.type;
-}
-
-void JVariable::operator=(const JVariable &other) {
     name = other.name;
     type = other.type;
 }
@@ -102,3 +96,28 @@ bool JVariable::alreadyInitialized() const {
 JVariable::~JVariable() {
     delete type;
 }
+
+JArray::JArray(JType* type, std::string ident, int line_number) {
+    name = ident;
+    this->line_number = line_number;
+    this->type = type;
+}
+
+JArray::JArray(const JArray &other) {
+    type = other.type;
+    name = other.name;
+    line_number = other.line_number;
+}
+
+bool JArray::isArray() const {
+    return true;
+}
+
+JType const * JArray::getType() const {
+    return type;
+}
+
+JArray::~JArray() {
+    delete type;
+}
+

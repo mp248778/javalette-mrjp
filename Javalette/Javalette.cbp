@@ -45,7 +45,7 @@
 		<Unit filename="../analyzer/DeclarationVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../analyzer/ExpresionVisitor.C">
+		<Unit filename="../analyzer/ExpressionVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../analyzer/FunctionVisitor.C">
@@ -59,7 +59,7 @@
 		</Unit>
 		<Unit filename="../include/Absyn.H" />
 		<Unit filename="../include/DeclarationVisitor.H" />
-		<Unit filename="../include/ExpresionVisitor.H" />
+		<Unit filename="../include/ExpressionVisitor.H" />
 		<Unit filename="../include/FunctionVisitor.H" />
 		<Unit filename="../include/InstructionVisitor.H" />
 		<Unit filename="../include/JType.H" />

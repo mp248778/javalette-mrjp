@@ -47,7 +47,7 @@ void FunctionVisitor::visitListInstr(ListInstr* listinstr) {
     }
 }
 
-void FunctionVisitor::visitCompundInstr(CompundInstr *compundinstr) {
+void FunctionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
     //noop
 }
 
@@ -67,7 +67,7 @@ void FunctionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifels
     //noop
 }
 
-void FunctionVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
+void FunctionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
     //noop
 }
 
@@ -79,13 +79,17 @@ void FunctionVisitor::visitWhileLoop(WhileLoop *whileloop) {
     //noop
 }
 
-void FunctionVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
+void FunctionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
     //noop
 }
 
 /******************************************************************************
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
+
+void FunctionVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
 void FunctionVisitor::visitProg(Prog* t) {
     logger.internalVisitorError(__FILE__, __LINE__);    //abstract class

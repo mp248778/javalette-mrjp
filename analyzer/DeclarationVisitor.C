@@ -1,9 +1,9 @@
 #include "DeclarationVisitor.H"
-#include "ExpresionVisitor.H"
+#include "ExpressionVisitor.H"
 
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 
-void DeclarationVisitor::_visitDeclaration(JVariable *jv) {
+void DeclarationVisitor::_visitDeclaration(JSymbol *jv) {
     if (st.definedInCurrentScope(jv->getName())) {
         logger.alreadyDefined(jv, st.lookup(jv->getName()));
         delete jv;
@@ -24,11 +24,21 @@ void DeclarationVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
 }
 
 void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
-    ExpresionVisitor ev(st, logger);
+    ExpressionVisitor ev(st, logger);
     initdeclarator->expr_->accept(&ev);
     JVariable *jv = new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number);
     jv->initialized();
     _visitDeclaration(jv);
+}
+
+void DeclarationVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
+    ExpressionVisitor ev(st, logger);
+    p->expr_->accept(&ev);
+    if(!p->expr_->jtype_->isInt()) {
+        logger.notAType(p->expr_, "int");
+    }
+    _visitDeclaration(new JArray(currentType->clone(), p->ident_, p->line_number));
+
 }
 
 void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {
@@ -49,7 +59,7 @@ void DeclarationVisitor::visitFunctionArg(FunctionArg *functionarg) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void DeclarationVisitor::visitCompundInstr(CompundInstr *compundinstr) {
+void DeclarationVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
@@ -121,7 +131,7 @@ void DeclarationVisitor::visitBoolType(BoolType *booltype) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void DeclarationVisitor::visitReturnExpr(ReturnExpr *returnexpr) {
+void DeclarationVisitor::visitReturnInstr(ReturnInstr *returninstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
@@ -137,7 +147,7 @@ void DeclarationVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalif
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void DeclarationVisitor::visitExpresionInstr(ExpresionInstr *expresioninstr) {
+void DeclarationVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
