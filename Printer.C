@@ -387,12 +387,29 @@ void PrintAbsyn::visitArrayDeclarator(ArrayDeclarator* p)
 
 void PrintAbsyn::visitExpr(Expr*p) {} //abstract class
 
-void PrintAbsyn::visitAssigment(Assigment* p)
+void PrintAbsyn::visitIdentAssigment(IdentAssigment* p)
 {
   int oldi = _i_;
   if (oldi > 0) render(_L_PAREN);
 
-  _i_ = 11; p->expr_1->accept(this);
+  visitIdent(p->ident_);
+  render('=');
+  _i_ = 0; p->expr_->accept(this);
+
+  if (oldi > 0) render(_R_PAREN);
+
+  _i_ = oldi;
+}
+
+void PrintAbsyn::visitArrayAssigment(ArrayAssigment* p)
+{
+  int oldi = _i_;
+  if (oldi > 0) render(_L_PAREN);
+
+  visitIdent(p->ident_);
+  render('[');
+  _i_ = 0; p->expr_1->accept(this);
+  render(']');
   render('=');
   _i_ = 0; p->expr_2->accept(this);
 
@@ -1091,10 +1108,24 @@ void ShowAbsyn::visitArrayDeclarator(ArrayDeclarator* p)
 }
 void ShowAbsyn::visitExpr(Expr* p) {} //abstract class
 
-void ShowAbsyn::visitAssigment(Assigment* p)
+void ShowAbsyn::visitIdentAssigment(IdentAssigment* p)
 {
   bufAppend('(');
-  bufAppend("Assigment");
+  bufAppend("IdentAssigment");
+  bufAppend(' ');
+  visitIdent(p->ident_);
+  bufAppend(' ');
+  bufAppend('[');
+  if (p->expr_)  p->expr_->accept(this);
+  bufAppend(']');
+  bufAppend(')');
+}
+void ShowAbsyn::visitArrayAssigment(ArrayAssigment* p)
+{
+  bufAppend('(');
+  bufAppend("ArrayAssigment");
+  bufAppend(' ');
+  visitIdent(p->ident_);
   bufAppend(' ');
   p->expr_1->accept(this);
   bufAppend(' ');

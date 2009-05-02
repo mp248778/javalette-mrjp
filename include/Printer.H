@@ -54,7 +54,8 @@ class PrintAbsyn : public Visitor
   void visitInitDeclarator(InitDeclarator *p);
   void visitArrayDeclarator(ArrayDeclarator *p);
   void visitExpr(Expr *p); /* abstract class */
-  void visitAssigment(Assigment *p);
+  void visitIdentAssigment(IdentAssigment *p);
+  void visitArrayAssigment(ArrayAssigment *p);
   void visitPostDecrement(PostDecrement *p);
   void visitPostIncrement(PostIncrement *p);
   void visitCast(Cast *p);
@@ -184,7 +185,8 @@ class ShowAbsyn : public Visitor
   void visitInitDeclarator(InitDeclarator *p);
   void visitArrayDeclarator(ArrayDeclarator *p);
   void visitExpr(Expr *p); /* abstract class */
-  void visitAssigment(Assigment *p);
+  void visitIdentAssigment(IdentAssigment *p);
+  void visitArrayAssigment(ArrayAssigment *p);
   void visitPostDecrement(PostDecrement *p);
   void visitPostIncrement(PostIncrement *p);
   void visitCast(Cast *p);

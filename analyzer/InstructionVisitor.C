@@ -115,6 +115,13 @@ void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
 NOTHING MORE INTERESING
 ******************************************************************************/
 
+void InstructionVisitor::visitIdentAssigment(IdentAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+void InstructionVisitor::visitArrayAssigment(ArrayAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
 void InstructionVisitor::visitArrayDeclarator(ArrayDeclarator *p) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
@@ -172,10 +179,6 @@ void InstructionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
 }
 
 void InstructionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void InstructionVisitor::visitAssigment(Assigment *assigment) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 

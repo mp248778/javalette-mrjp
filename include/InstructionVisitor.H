@@ -40,7 +40,8 @@ public:
     void visitWhileLoop(WhileLoop* p);
     void visitOnlyDeclarator(OnlyDeclarator* p);
     void visitInitDeclarator(InitDeclarator* p);
-    void visitAssigment(Assigment* p);
+    void visitIdentAssigment(IdentAssigment *p);
+    void visitArrayAssigment(ArrayAssigment *p);
     void visitPostDecrement(PostDecrement* p);
     void visitPostIncrement(PostIncrement* p);
     void visitCast(Cast* p);

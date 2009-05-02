@@ -12,15 +12,15 @@ public:
     void alreadyDefined(const JSymbol *, const JSymbol *);
     void undefined(const Ident *i, int line_number);
     bool anyFatalErrors() const;
-    void notAType(Expr *e, std::string type);
-    void notANumeric(Expr*);
-    void notEqualTypes(Expr *e, JType *t1, JType *t2);
-    void badAmountOfArguments(FunctionCall*);
-    void notAnArray(ArrayAccess*);
-    void notAFunction(FunctionCall*);
-    void notAVariable(IdentExpr*);
-    void notAComparable(JType*, JType*, int);
-    void uninitializedValue(IdentExpr*);
+    void notAType(const Expr*, const std::string);
+    void notANumeric(const Expr*);
+    void notEqualTypes(const Expr*, const JType*, const JType*);
+    void badAmountOfArguments(const FunctionCall*);
+    void notAnArray(const std::string&, int line_number);
+    void notAFunction(const FunctionCall*);
+    void notAVariable(const std::string, int);
+    void notAComparable(const JType*, const JType*, int);
+    void uninitializedValue(const IdentExpr*);
 };
 
 #endif

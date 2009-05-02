@@ -1,5 +1,5 @@
-#ifndef EXPRESIONVISITOR_HEADER
-#define EXPRESIONVISITOR_HEADER
+#ifndef ASSIGMENTVISITOR_HEADER 
+#define ASSIGMENTVISITOR_HEADER 
 
 
 #include "Absyn.H"
@@ -7,19 +7,12 @@
 #include "Logger.H"
 #include "Symbol.H"
 
-class ExpressionVisitor : public Visitor {
+class AssigmentVisitor : public Visitor {
 private:
     SymbolTable<std::string, JSymbol> &st;
-    void _visitFunction(JFunction);
     Logger &logger;
-    std::stack<JType*> types;
-    JType* _pop();
-    void numericBinaryOp(Expr*);
-    void comparisonOp(Expr*);
-    void numericComparisonOp(Expr*);
-    void booleanBinaryOp(Expr*);
 public:
-    ExpressionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
+    AssigmentVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);
     void visitFunDef(FunDef* p);
     void visitType(Type* p);
@@ -47,8 +40,7 @@ public:
     void visitWhileLoop(WhileLoop* p);
     void visitOnlyDeclarator(OnlyDeclarator* p);
     void visitInitDeclarator(InitDeclarator* p);
-    void visitIdentAssigment(IdentAssigment *p);
-    void visitArrayAssigment(ArrayAssigment *p);
+    void visitAssigment(Assigment* p);
     void visitPostDecrement(PostDecrement* p);
     void visitPostIncrement(PostIncrement* p);
     void visitCast(Cast* p);

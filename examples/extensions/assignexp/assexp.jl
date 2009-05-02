@@ -1,5 +1,8 @@
 int main() {
   int x, y;
+  int z,w;
+  z = w = 3;
+
 
   x = (y = 3);
   printInt(x);

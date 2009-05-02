@@ -1,5 +1,23 @@
 #include "ExpressionVisitor.H"
 
+/*void ExpressionVisitor::visitAssigment(Assigment *assigment) {
+    AssigmentVisitor av(st, logger);
+    assigment->accept(&av);
+
+    assigment->expr_1->accept(this);
+    assigment->expr_2->accept(this);
+    JType *type;
+    JType *t1 = _pop();
+    JType *t2 = _pop();
+    if (t1->sameType(t2)) {
+        type = t1->clone();
+    } else {
+        type = new JUnknownType();
+    }
+    types.push(type);
+    assigment->jtype_ = type;
+}*/
+
 
 ExpressionVisitor::ExpressionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
@@ -84,24 +102,6 @@ void ExpressionVisitor::visitListExpr(ListExpr* listexpr) {
     for (ListExpr::iterator i = listexpr->begin() ; i != listexpr->end() ; ++i) {
         (*i)->accept(this);
     }
-}
-
-void ExpressionVisitor::visitAssigment(Assigment *assigment) {
-    AssigmentVisitor av(st, logger);
-    assigment->accept(&av);
-
-    assigment->expr_1->accept(this);
-    assigment->expr_2->accept(this);
-    JType *type;
-    JType *t1 = _pop();
-    JType *t2 = _pop();
-    if (t1->sameType(t2)) {
-        type = t1->clone();
-    } else {
-        type = new JUnknownType();
-    }
-    types.push(type);
-    assigment->jtype_ = type;
 }
 
 void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
@@ -304,7 +304,7 @@ void ExpressionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
         logger.undefined(&arrayaccess->ident_, arrayaccess->line_number);
         type = new JUnknownType();
     } else if (!s->isArray()) {
-        logger.notAnArray(arrayaccess);
+        logger.notAnArray(arrayaccess->ident_, arrayaccess->line_number);
         type = new JUnknownType();
     } else if (!t->isInt()) {
         logger.notAType(arrayaccess, "int");
@@ -322,7 +322,7 @@ void ExpressionVisitor::visitIdentExpr(IdentExpr *identexpr) {
         logger.undefined(&identexpr->ident_, identexpr->line_number);
         type = new JUnknownType();
     } else if (!s->isVariable()) {
-        logger.notAVariable(identexpr);
+        logger.notAVariable(identexpr->ident_, identexpr->line_number);
         type = new JUnknownType();
     } else {
         const JVariable *jv = static_cast<const JVariable*>(s);
@@ -363,7 +363,56 @@ void ExpressionVisitor::visitLiteralBoolean(LiteralBoolean *literalboolean) {
     types.push(type);
 }
 
+void ExpressionVisitor::visitIdentAssigment(IdentAssigment *p) {
+    p->expr_->accept(this);
+    JType *type;
+    JType *t = _pop();
+    JSymbol *s = st.lookup(p->ident_);
+    if(!s) {
+        logger.undefined(&p->ident_, p->line_number);
+        type = new JUnknownType();
+    }
+    else if(!s->isVariable()) {
+        logger.notAVariable(p->ident_, p->line_number);
+        type = new JUnknownType();
+    } else if (t->sameType(s->getType())) {
+        logger.notEqualTypes(p, t, s->getType());
+    } else {
+        JVariable * jv = static_cast<JVariable*>(s);
+        jv->initialize();
+        type = s->getType()->clone();
+    }
+    types.push(type);
+    p->jtype_ = type;
 
+}
+
+void ExpressionVisitor::visitArrayAssigment(ArrayAssigment *p) {
+    p->expr_1->accept(this);
+    p->expr_2->accept(this);
+    const JSymbol *s = st.lookup(p->ident_);
+    JType *type;
+    JType *t1 = _pop();
+    JType *t2 = _pop();
+    if (!s) {
+        logger.undefined(&p->ident_, p->line_number);
+        type = new JUnknownType();
+    } else if (!s->isArray()) {
+        logger.notAnArray(p->ident_, p->line_number);
+        type = new JUnknownType();
+    } else if (!t1->isInt()) {
+        logger.notAType(p, "int");
+        type = new JUnknownType();
+    } else if (!t2->sameType(s->getType())) {
+        logger.notAType(p, s->getType()->toString());
+        type = new JUnknownType();
+    } else {
+        type = s->getType()->clone();
+    }
+    p->jtype_ = type;
+    types.push(type);
+
+}
 
 /******************************************************************************
 NOTHING MORE INTERESTING HERE

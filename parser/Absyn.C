@@ -162,6 +162,7 @@ JType* DoubleType::getJType() const {
     return new JDouble();
 }
 
+
 DoubleType &DoubleType::operator=(const DoubleType & other)
 {
   DoubleType tmp(other);
@@ -931,50 +932,100 @@ ArrayDeclarator *ArrayDeclarator::clone() const
 
 
 
-/********************   Assigment    ********************/
-Assigment::Assigment(Expr *p1, Expr *p2)
+/********************   IdentAssigment    ********************/
+IdentAssigment::IdentAssigment(Ident p1, Expr *p2)
 {
-  expr_1 = p1;
-  expr_2 = p2;
+  ident_ = p1;
+  expr_ = p2;
 
 }
 
-Assigment::Assigment(const Assigment & other)
+IdentAssigment::IdentAssigment(const IdentAssigment & other)
 {
+  ident_ = other.ident_;
+  expr_ = other.expr_->clone();
+
+}
+
+IdentAssigment &IdentAssigment::operator=(const IdentAssigment & other)
+{
+  IdentAssigment tmp(other);
+  swap(tmp);
+  return *this;
+}
+
+void IdentAssigment::swap(IdentAssigment & other)
+{
+  std::swap(ident_, other.ident_);
+  std::swap(expr_, other.expr_);
+
+}
+
+IdentAssigment::~IdentAssigment()
+{
+  delete(expr_);
+
+}
+
+void IdentAssigment::accept(Visitor *v)
+{
+  v->visitIdentAssigment(this);
+}
+
+IdentAssigment *IdentAssigment::clone() const
+{
+  return new IdentAssigment(*this);
+}
+
+
+
+/********************   ArrayAssigment    ********************/
+ArrayAssigment::ArrayAssigment(Ident p1, Expr *p2, Expr *p3)
+{
+  ident_ = p1;
+  expr_1 = p2;
+  expr_2 = p3;
+
+}
+
+ArrayAssigment::ArrayAssigment(const ArrayAssigment & other)
+{
+  ident_ = other.ident_;
   expr_1 = other.expr_1->clone();
   expr_2 = other.expr_2->clone();
 
 }
 
-Assigment &Assigment::operator=(const Assigment & other)
+ArrayAssigment &ArrayAssigment::operator=(const ArrayAssigment & other)
 {
-  Assigment tmp(other);
+  ArrayAssigment tmp(other);
   swap(tmp);
   return *this;
 }
 
-void Assigment::swap(Assigment & other)
+void ArrayAssigment::swap(ArrayAssigment & other)
 {
+  std::swap(ident_, other.ident_);
   std::swap(expr_1, other.expr_1);
   std::swap(expr_2, other.expr_2);
 
 }
 
-Assigment::~Assigment()
+ArrayAssigment::~ArrayAssigment()
 {
   delete(expr_1);
   delete(expr_2);
 
 }
 
-void Assigment::accept(Visitor *v)
+void ArrayAssigment::accept(Visitor *v)
 {
-  v->visitAssigment(this);
+  v->visitArrayAssigment(this);
 }
 
-Assigment *Assigment::clone() const
+ArrayAssigment *ArrayAssigment::clone() const
 {
-  return new Assigment(*this);
+  return new ArrayAssigment(*this);
 }
 
 

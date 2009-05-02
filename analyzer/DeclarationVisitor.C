@@ -27,7 +27,7 @@ void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     ExpressionVisitor ev(st, logger);
     initdeclarator->expr_->accept(&ev);
     JVariable *jv = new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number);
-    jv->initialized();
+    jv->initialize();
     _visitDeclaration(jv);
 }
 
@@ -50,6 +50,13 @@ void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {
 /******************************************************************************
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
+
+void DeclarationVisitor::visitIdentAssigment(IdentAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+void DeclarationVisitor::visitArrayAssigment(ArrayAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
 void DeclarationVisitor::visitFunction(Function *function) {
     logger.internalVisitorError(__FILE__, __LINE__);
@@ -156,10 +163,6 @@ void DeclarationVisitor::visitForLoop(ForLoop *forloop) {
 }
 
 void DeclarationVisitor::visitWhileLoop(WhileLoop *whileloop) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void DeclarationVisitor::visitAssigment(Assigment *assigment) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 

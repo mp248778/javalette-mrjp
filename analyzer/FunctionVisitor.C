@@ -87,6 +87,13 @@ void FunctionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
 
+void FunctionVisitor::visitIdentAssigment(IdentAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+void FunctionVisitor::visitArrayAssigment(ArrayAssigment *p) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
 void FunctionVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
@@ -148,10 +155,6 @@ void FunctionVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
 }
 
 void FunctionVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void FunctionVisitor::visitAssigment(Assigment *assigment) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 

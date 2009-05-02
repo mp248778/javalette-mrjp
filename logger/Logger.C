@@ -21,42 +21,42 @@ void Logger::undefined(const Ident *i, int line_number) {
     fatal = true;
 }
 
-void Logger::notAType(Expr *e, std::string type) {
+void Logger::notAType(const Expr *e, std::string type) {
     std::cerr << ":" << e->line_number << ": type of expression is not " << type << "\n";
     fatal = true;
 }
 
-void Logger::notANumeric(Expr *e) {
+void Logger::notANumeric(const Expr *e) {
     notAType(e, "int or double");
 }
 
-void Logger::notEqualTypes(Expr *e, JType *t1, JType *t2) {
+void Logger::notEqualTypes(const Expr *e, const JType *t1, const JType *t2) {
     std::cerr << ":" << e->line_number << ": expression types do not match, got " << t1->toString() << " and " << t2->toString() << "\n";
 }
 
-void Logger::badAmountOfArguments(FunctionCall *fc) {
+void Logger::badAmountOfArguments(const FunctionCall *fc) {
     std::cerr << ":" << fc->line_number << ": call to " << fc->ident_ << " has wrong number of arguments\n";
     fatal = true;
 }
 
-void Logger::notAnArray(ArrayAccess *aa) {
-    std::cerr << ":" << aa->line_number << ": " << aa->ident_ << " is not declared as an array\n";
+void Logger::notAnArray(const std::string &ident_, int line_number) {
+    std::cerr << ":" << line_number << ": " << ident_ << " is not declared as an array\n";
     fatal = true;
 }
 
-void Logger::notAFunction(FunctionCall *fc) {
+void Logger::notAFunction(const FunctionCall *fc) {
     std::cerr << ":" << fc->line_number << ": " << fc->ident_ << " is not declared as a function\n";
 }
 
-void Logger::notAVariable(IdentExpr *ie) {
-    std::cerr << ":" << ie->line_number << ": " << ie->ident_ << " is not declared as a variable\n";
+void Logger::notAVariable(const std::string ident_, int line_number) {
+    std::cerr << ":" << line_number << ": " << ident_ << " is not declared as a variable\n";
 }
 
-void Logger::notAComparable(JType *t1, JType *t2, int line_number) {
+void Logger::notAComparable(const JType *t1, const JType *t2, int line_number) {
     std::cerr << ":" << line_number << ": " << t1->toString() << " type is not comparable with " << t2->toString() << "\n";
 }
 
-void Logger::uninitializedValue(IdentExpr *ie) {
+void Logger::uninitializedValue(const IdentExpr *ie) {
     std::cerr << ":" << ie->line_number << ": " << ie->ident_ << " variable is used before initialization\n";
 }
 

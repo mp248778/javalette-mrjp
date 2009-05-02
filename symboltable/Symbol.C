@@ -85,7 +85,7 @@ JType const * JVariable::getType() const {
     return type;
 }
 
-void JVariable::initialized() {
+void JVariable::initialize() {
     used = true;
 }
 

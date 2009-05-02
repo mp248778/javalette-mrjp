@@ -45,7 +45,7 @@ public:
     JVariable(const JVariable&);
     bool isVariable() const;
     JType const * getType() const;
-    void initialized();
+    void initialize();
     bool alreadyInitialized() const;
     ~JVariable();
 };
