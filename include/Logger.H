@@ -12,8 +12,8 @@ public:
     void alreadyDefined(const JSymbol *, const JSymbol *);
     void undefined(const std::string&, int line_number);
     bool anyFatalErrors() const;
-    void notAType(const Expr*, const std::string);
-    void notANumeric(const Expr*);
+    void notAType(const std::string, int);
+    void notANumeric(int);
     void notEqualTypes(const Expr*, const JType*, const JType*);
     void badAmountOfArguments(const FunctionCall*);
     void notAnArray(const std::string&, int line_number);
@@ -21,6 +21,8 @@ public:
     void notAVariable(const std::string, int);
     void notAComparable(const JType*, const JType*, int);
     void uninitializedValue(const std::string&, int);
+    void unreachable(const Instr *i);
+    void pathWithoutReturn(Function *);
 };
 
 #endif

@@ -11,6 +11,9 @@ class InstructionVisitor : public Visitor {
 private:
     SymbolTable<std::string, JSymbol> &st;
     Logger &logger;
+    std::stack<bool> pathFinishes;
+    std::stack<JType*> returnType;
+    void _registerReturn();
 public:
     InstructionVisitor(SymbolTable<std::string, JSymbol>&, Logger&);
     void visitProg(Prog* p);

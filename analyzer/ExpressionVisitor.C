@@ -24,7 +24,7 @@ void ExpressionVisitor::numericBinaryOp(Expr *e) {
             type = new JUnknownType();
         }
     } else {
-        logger.notANumeric(e);
+        logger.notANumeric(e->line_number);
         type = new JUnknownType();
     }
     types.push(type);
@@ -62,7 +62,7 @@ void ExpressionVisitor::numericComparisonOp(Expr *e) {
             type = new JUnknownType();
         }
     } else {
-        logger.notANumeric(e);
+        logger.notANumeric(e->line_number);
         type = new JUnknownType();
     }
     types.push(type);
@@ -76,7 +76,7 @@ void ExpressionVisitor::booleanBinaryOp(Expr *e) {
     if (t1->isBool() && t2->isBool()) {
         type = new JBool();
     } else {
-        logger.notAType(e, "bool");
+        logger.notAType("bool", e->line_number);
         type = new JUnknownType();
     }
     types.push(type);
@@ -101,7 +101,7 @@ void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
     } else {
         const JVariable* jv = static_cast<const JVariable*>(s);
         if(!jv->getType()->isNumeric()) {
-            logger.notANumeric(postdecrement);
+            logger.notANumeric(postdecrement->line_number);
             type = new JUnknownType();
         } else if(!jv->alreadyInitialized()) {
             logger.uninitializedValue(postdecrement->ident_, postdecrement->line_number);
@@ -125,7 +125,7 @@ void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
     } else {
         const JVariable* jv = static_cast<const JVariable*>(s);
         if(!jv->getType()->isNumeric()) {
-            logger.notANumeric(postincrement);
+            logger.notANumeric(postincrement->line_number);
             type = new JUnknownType();
         } else if(!jv->alreadyInitialized()) {
             logger.uninitializedValue(postincrement->ident_, postincrement->line_number);
@@ -225,7 +225,7 @@ void ExpressionVisitor::visitModExpr(ModExpr *modexpr) {
     if (t1->isInt() && t2->isInt())
         type = new JInt();
     else {
-        logger.notAType(modexpr, "int");
+        logger.notAType("int", modexpr->line_number);
         type = new JUnknownType();
     }
     modexpr->jtype_ = type;
@@ -239,7 +239,7 @@ void ExpressionVisitor::visitNegExpr(NegExpr *negexpr) {
     if (t1->isBool())
         type = t1->clone();
     else {
-        logger.notAType(negexpr, "bool");
+        logger.notAType("bool", negexpr->line_number);
         type = new JUnknownType();
     }
     negexpr->jtype_ = type;
@@ -253,7 +253,7 @@ void ExpressionVisitor::visitPlusExpr(PlusExpr *plusexpr) {
     if (t1->isNumeric())
         type = t1->clone();
     else {
-        logger.notANumeric(plusexpr);
+        logger.notANumeric(plusexpr->line_number);
         type = new JUnknownType();
     }
     plusexpr->jtype_ = type;
@@ -267,7 +267,7 @@ void ExpressionVisitor::visitMinusExpr(MinusExpr *minusexpr) {
     if (t1->isNumeric())
         type = t1->clone();
     else {
-        logger.notANumeric(minusexpr);
+        logger.notANumeric(minusexpr->line_number);
         type = new JUnknownType();
     }
     minusexpr->jtype_ = type;
@@ -287,7 +287,7 @@ void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
         } else {
             for (int i = f->getArguments().size() - 1; i >= 0; i--) {
                 if (!f->getArguments()[i]->sameType(_pop()))
-                    logger.notAType(functioncall->listexpr_->at(i), f->getArguments()[i]->toString());
+                    logger.notAType(f->getArguments()[i]->toString(), functioncall->listexpr_->at(i)->line_number);
             }
         }
         type = f->getType()->clone();
@@ -318,7 +318,7 @@ void ExpressionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
         logger.notAnArray(arrayaccess->ident_, arrayaccess->line_number);
         type = new JUnknownType();
     } else if (!t->isInt()) {
-        logger.notAType(arrayaccess, "int");
+        logger.notAType("int", arrayaccess->line_number);
     } else {
         type = s->getType()->clone();
     }
@@ -413,10 +413,10 @@ void ExpressionVisitor::visitArrayAssigment(ArrayAssigment *p) {
         logger.notAnArray(p->ident_, p->line_number);
         type = new JUnknownType();
     } else if (!t2->isInt()) {
-        logger.notAType(p, "int");
+        logger.notAType("int", p->line_number);
         type = new JUnknownType();
     } else if (!t1->sameType(s->getType())) {
-        logger.notAType(p, s->getType()->toString());
+        logger.notAType(s->getType()->toString(), p->line_number);
         type = new JUnknownType();
     } else {
         type = s->getType()->clone();

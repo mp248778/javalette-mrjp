@@ -66,7 +66,7 @@
 
 1241109419 /home/frea/mrjp//include/JType.H
 
-1241281477 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
+1241441258 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
 	"DeclarationVisitor.H"
 	"ExpressionVisitor.H"
 
@@ -113,7 +113,7 @@
 	"Logger.H"
 	"Symbol.H"
 
-1241284711 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
+1241443583 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
 	"InstructionVisitor.H"
 	"FunctionVisitor.H"
 	"ExpressionVisitor.H"
@@ -131,7 +131,7 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241285811 source:/home/frea/mrjp/logger/Logger.C
+1241442743 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
 	"Logger.H"
 	"JType.H"
@@ -159,10 +159,10 @@
 	"Absyn.H"
 	"JType.H"
 
-1241285359 /home/frea/mrjp/include/Logger.H
+1241442447 /home/frea/mrjp/include/Logger.H
 	"Symbol.H"
 
-1241277667 /home/frea/mrjp/include/InstructionVisitor.H
+1241441619 /home/frea/mrjp/include/InstructionVisitor.H
 	"Absyn.H"
 	"SymbolTable.H"
 	"Symbol.H"
@@ -199,6 +199,9 @@
 	"Logger.H"
 	"Symbol.H"
 
-1241285750 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
+1241442103 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
 	"ExpressionVisitor.H"
+
+1241281468 source:/home/frea/mrjp/symbol/JSymbol.C
+	"Symbol.H"
 

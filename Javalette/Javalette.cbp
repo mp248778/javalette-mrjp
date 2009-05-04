@@ -7,8 +7,8 @@
 		<Option compiler="gcc" />
 		<Option show_notes="0">
 			<notes>
-				<![CDATA[przypisanie
-Parser.C wrzucic poprawny
+				<![CDATA[returny sprawdzac (w tym typy!)
+
 ]]>
 			</notes>
 		</Option>
@@ -85,7 +85,7 @@ Parser.C wrzucic poprawny
 		<Unit filename="../parser/Parser.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../symboltable/Symbol.C">
+		<Unit filename="../symbol/JSymbol.C">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../types/JType.C">

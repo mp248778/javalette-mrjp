@@ -4,8 +4,9 @@
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 
 void DeclarationVisitor::_visitDeclaration(JSymbol *jv) {
-    if (st.definedInCurrentScope(jv->getName())) {
-        logger.alreadyDefined(jv, st.lookup(jv->getName()));
+    JSymbol *s = st.lookup(jv->getName());
+    if (st.definedInCurrentScope(jv->getName()) || (s != NULL && s->isFunction())) {
+        logger.alreadyDefined(jv, s);
         delete jv;
     }
     else
@@ -38,7 +39,7 @@ void DeclarationVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
     ExpressionVisitor ev(st, logger);
     p->expr_->accept(&ev);
     if(!p->expr_->jtype_->isInt()) {
-        logger.notAType(p->expr_, "int");
+        logger.notAType("int", p->expr_->line_number);
     }
     _visitDeclaration(new JArray(currentType->clone(), p->ident_, p->line_number));
 
@@ -46,6 +47,22 @@ void DeclarationVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
 
 void DeclarationVisitor::visitListDecl(ListDecl* listdecl) {
     for (ListDecl::iterator i = listdecl->begin() ; i != listdecl->end() ; ++i) {
+        (*i)->accept(this);
+    }
+}
+
+void DeclarationVisitor::visitFunction(Function *function) {
+    function->listarg_->accept(this);
+}
+
+void DeclarationVisitor::visitFunctionArg(FunctionArg *functionarg) {
+    JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
+    jv->initialize();
+    _visitDeclaration(jv);
+}
+
+void DeclarationVisitor::visitListArg(ListArg* listarg) {
+    for (ListArg::iterator i = listarg->begin() ; i != listarg->end() ; ++i) {
         (*i)->accept(this);
     }
 }
@@ -61,14 +78,6 @@ void DeclarationVisitor::visitArrayAssigment(ArrayAssigment *p) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 
-void DeclarationVisitor::visitFunction(Function *function) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void DeclarationVisitor::visitFunctionArg(FunctionArg *functionarg) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
 void DeclarationVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
@@ -78,10 +87,6 @@ void DeclarationVisitor::visitInnerFunction(InnerFunction *innerfunction) {
 }
 
 void DeclarationVisitor::visitListFunDef(ListFunDef* listfundef) {
-    logger.internalVisitorError(__FILE__, __LINE__);
-}
-
-void DeclarationVisitor::visitListArg(ListArg* listarg) {
     logger.internalVisitorError(__FILE__, __LINE__);
 }
 

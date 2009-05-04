@@ -21,13 +21,13 @@ void Logger::undefined(const std::string& ident, int line_number) {
     fatal = true;
 }
 
-void Logger::notAType(const Expr *e, std::string type) {
-    std::cerr << ":" << e->line_number << ": type of expression is not " << type << "\n";
+void Logger::notAType(std::string type, int line_number) {
+    std::cerr << ":" << line_number << ": type of expression is not " << type << "\n";
     fatal = true;
 }
 
-void Logger::notANumeric(const Expr *e) {
-    notAType(e, "int or double");
+void Logger::notANumeric(int line_number) {
+    notAType("int or double", line_number);
     fatal = true;
 }
 
@@ -63,6 +63,16 @@ void Logger::notAComparable(const JType *t1, const JType *t2, int line_number) {
 
 void Logger::uninitializedValue(const std::string& ident, int line_number) {
     std::cerr << ":" << line_number << ": " << ident << " variable is used before initialization\n";
+    fatal = true;
+}
+
+void Logger::unreachable(const Instr *i) {
+    std::cerr << ":" << i->line_number << ": instruction is unreachable\n";
+    fatal = true;
+}
+
+void Logger::pathWithoutReturn(Function *f) {
+    std::cerr << ":" << f->line_number << ": function " << f->ident_ << " has execution paths without return\n";
     fatal = true;
 }
 

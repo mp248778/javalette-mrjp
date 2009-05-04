@@ -5,6 +5,11 @@
 
 InstructionVisitor::InstructionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
+void InstructionVisitor::_registerReturn() {
+    pathFinishes.pop();
+    pathFinishes.push(true);
+}
+
 void InstructionVisitor::visitListFunDef(ListFunDef* listfundef) {
     FunctionVisitor fv(st, logger);
     listfundef->accept(&fv);
@@ -20,6 +25,10 @@ void InstructionVisitor::visitListInstr(ListInstr* listinstr) {
     FunctionVisitor fv(st, logger);
     listinstr->accept(&fv);
     for (ListInstr::iterator i = listinstr->begin() ; i != listinstr->end() ; ++i) {
+        if(pathFinishes.top()) {
+            logger.unreachable(*i);
+            break;
+        }
         (*i)->accept(this);
     }
 }
@@ -39,6 +48,12 @@ void InstructionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
 void InstructionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
     ExpressionVisitor ev(st, logger);
     returnexprinstr->expr_->accept(&ev);
+
+    JType *t1 = returnexprinstr->expr_->jtype_;
+    JType *t2 = returnType.top();
+    if(!t1->sameType(t2))
+        logger.notEqualTypes(returnexprinstr->expr_, t1, t2);
+    _registerReturn();
 }
 
 void InstructionVisitor::visitDeclInstr(DeclInstr *declinstr) {
@@ -49,15 +64,23 @@ void InstructionVisitor::visitDeclInstr(DeclInstr *declinstr) {
 void InstructionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
     ExpressionVisitor ev(st, logger);
     conditionalif->expr_->accept(&ev);
+    pathFinishes.push(false);
     conditionalif->instr_->accept(this);
+    pathFinishes.pop(); //ignoring
 }
 
 void InstructionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
     ExpressionVisitor ev(st, logger);
     conditionalifelse->expr_->accept(&ev);
 
+    bool fin1 = false, fin2 = false;
+    pathFinishes.push(false);
     conditionalifelse->instr_1->accept(this);
+    fin1 = pathFinishes.top(); pathFinishes.pop();
+    pathFinishes.push(false);
     conditionalifelse->instr_2->accept(this);
+    fin2 = pathFinishes.top(); pathFinishes.pop();
+    if(fin1 && fin2) _registerReturn();
 
 }
 
@@ -86,38 +109,46 @@ void InstructionVisitor::visitWhileLoop(WhileLoop *whileloop) {
 }
 
 void InstructionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
+    if(!returnType.top()->isVoid()) {
+       logger.notAType(returnType.top()->toString(), returninstr->line_number);
+    }
+    _registerReturn();
 }
 
 void InstructionVisitor::visitFunction(Function *function) {
-    function->listarg_->accept(this);
+    DeclarationVisitor dv(st, logger);
+    function->accept(&dv);
+
+    returnType.push(function->type_->getJType());
+    pathFinishes.push(false);
+
     function->instr_->accept(this);
+
+    if(!pathFinishes.top() && !returnType.top()->isVoid())
+        logger.pathWithoutReturn(function);
+    pathFinishes.pop();
+    delete returnType.top();
+    returnType.pop();
 }
 
 void InstructionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
     innerfunction->fundef_->accept(this);
 }
 
-void InstructionVisitor::visitListArg(ListArg* listarg) {
-    for (ListArg::iterator i = listarg->begin() ; i != listarg->end() ; ++i) {
-        (*i)->accept(this);
-    }
-}
-
-void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
-    JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
-    jv->initialize();
-    if (st.definedInCurrentScope(jv->getName())) {
-        logger.alreadyDefined(jv, st.lookup(jv->getName()));
-        delete jv;
-    } else st.add(jv->getName(), jv);
-}
-
 /******************************************************************************
 NOTHING MORE INTERESING
 ******************************************************************************/
 
-void InstructionVisitor::visitIdentAssigment(IdentAssigment *p) {
+void InstructionVisitor::visitListArg(ListArg* listarg) {
     logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void InstructionVisitor::visitFunctionArg(FunctionArg *functionarg) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void InstructionVisitor::visitIdentAssigment(IdentAssigment *p) {
+
 }
 void InstructionVisitor::visitArrayAssigment(ArrayAssigment *p) {
     logger.internalVisitorError(__FILE__, __LINE__);
