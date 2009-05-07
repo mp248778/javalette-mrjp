@@ -18,7 +18,9 @@ void FunctionVisitor::_visitFunction(JFunction *jf) {
 void FunctionVisitor::visitFunction(Function *function) {
     listarg.clear();
     function->listarg_->accept(this);
-    _visitFunction(new JFunction(function, listarg));
+    JFunction *jf = new JFunction(function, listarg);
+    function->ident_ = jf->getObfuscatedName();
+    _visitFunction(jf);
 }
 
 void FunctionVisitor::visitFunctionArg(FunctionArg *functionarg) {

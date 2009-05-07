@@ -27,6 +27,12 @@ int main(int argc, char ** argv) {
     Prog *parse_tree = pProg(input);
     printf("Parsing finished\n");
     if (parse_tree) {
+        SymbolTable<std::string, JSymbol> st;
+        Logger logger;
+        populateSymbolTable(st);
+        InstructionVisitor iv(st, logger);
+        parse_tree->accept(&iv);
+        if (logger.anyFatalErrors()) return 1;
         printf("\nParse Succesful!\n");
         printf("\n[Abstract Syntax]\n");
         ShowAbsyn *s = new ShowAbsyn();
@@ -34,13 +40,7 @@ int main(int argc, char ** argv) {
         printf("[Linearized Tree]\n");
         PrintAbsyn *p = new PrintAbsyn();
         printf("%s\n\n", p->print(parse_tree));
-        SymbolTable<std::string, JSymbol> st;
-        Logger logger;
-        populateSymbolTable(st);
-        InstructionVisitor iv(st, logger);
-        parse_tree->accept(&iv);
-        if (logger.anyFatalErrors()) return 1;
-        else return 0;
+        return 0;
     }
     return 1;
 }

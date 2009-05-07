@@ -10,14 +10,17 @@
 class JSymbol {
 protected:
     std::string name;
+    std::string oName;
     int line_number;
     JSymbol() {}
 public:
     virtual std::string getName() const;
+    virtual std::string getObfuscatedName() const;
     int getLine() const;
     virtual bool isFunction() const;
     virtual bool isVariable() const;
     virtual bool isArray() const;
+    void createObfuscatedName();
     virtual JType const * getType() const = 0;
     virtual ~JSymbol() = 0;
 };

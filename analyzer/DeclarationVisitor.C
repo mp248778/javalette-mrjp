@@ -1,6 +1,7 @@
 #include "DeclarationVisitor.H"
 #include "ExpressionVisitor.H"
 
+
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 
 void DeclarationVisitor::_visitDeclaration(JSymbol *jv) {
@@ -21,13 +22,16 @@ void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
 }
 
 void DeclarationVisitor::visitOnlyDeclarator(OnlyDeclarator *onlydeclarator) {
-    _visitDeclaration(new JVariable(currentType->clone(), onlydeclarator->ident_, onlydeclarator->line_number));
+    JVariable *jv = new JVariable(currentType->clone(), onlydeclarator->ident_, onlydeclarator->line_number);
+    onlydeclarator->ident_ = jv->getObfuscatedName();
+    _visitDeclaration(jv);
 }
 
 void DeclarationVisitor::visitInitDeclarator(InitDeclarator *initdeclarator) {
     ExpressionVisitor ev(st, logger);
     initdeclarator->expr_->accept(&ev);
     JVariable *jv = new JVariable(currentType->clone(), initdeclarator->ident_, initdeclarator->line_number);
+    initdeclarator->ident_ = jv->getObfuscatedName();
     jv->initialize();
     if(!initdeclarator->expr_->jtype_->sameType(jv->getType())) {
         logger.notEqualTypes(initdeclarator->expr_, initdeclarator->expr_->jtype_, jv->getType());
@@ -41,7 +45,9 @@ void DeclarationVisitor::visitArrayDeclarator(ArrayDeclarator* p) {
     if(!p->expr_->jtype_->isInt()) {
         logger.notAType("int", p->expr_->line_number);
     }
-    _visitDeclaration(new JArray(currentType->clone(), p->ident_, p->line_number));
+    JArray *ja = new JArray(currentType->clone(), p->ident_, p->line_number);
+    p->ident_ = ja->getObfuscatedName();
+    _visitDeclaration(ja);
 
 }
 
@@ -57,6 +63,7 @@ void DeclarationVisitor::visitFunction(Function *function) {
 
 void DeclarationVisitor::visitFunctionArg(FunctionArg *functionarg) {
     JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
+    functionarg->ident_ = jv->getObfuscatedName();
     jv->initialize();
     _visitDeclaration(jv);
 }

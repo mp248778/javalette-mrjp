@@ -10,7 +10,6 @@
 class ExpressionVisitor : public Visitor {
 private:
     SymbolTable<std::string, JSymbol> &st;
-    void _visitFunction(JFunction);
     Logger &logger;
     std::stack<JType*> types;
     JType* _pop();

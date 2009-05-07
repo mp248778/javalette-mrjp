@@ -1,11 +1,19 @@
 #include "Symbol.H"
+#include "ObfuseNames.H"
 
-//JVariable musi byc przypisane zeby mozna bylo przeczytac wartosc
 
 JSymbol::~JSymbol() {}
 
 std::string JSymbol::getName() const {
     return name;
+}
+
+void JSymbol::createObfuscatedName() {
+    oName = ObfuseNames::obfuscate(name);
+}
+
+std::string JSymbol::getObfuscatedName() const {
+    return oName;
 }
 
 int JSymbol::getLine() const {
@@ -28,6 +36,7 @@ JFunction::JFunction(const std::string &name, JType *rettype, std::vector<JType*
     this->name = name;
     this->rettype = rettype;
     this->listarg = listarg;
+    createObfuscatedName();
 }
 
 JFunction::JFunction(const Function *f, std::vector<JType*> &listarg) {
@@ -35,11 +44,13 @@ JFunction::JFunction(const Function *f, std::vector<JType*> &listarg) {
     name = f->ident_;
     line_number = f->line_number;
     rettype = f->type_->getJType();
+    createObfuscatedName();
 }
 
 JFunction::JFunction(const JFunction& other) {
     listarg = other.listarg;
     name = other.name;
+    oName = other.oName;
 }
 
 bool JFunction::isFunction() const {
@@ -65,16 +76,13 @@ JVariable::JVariable(JType *t, std::string name, int line_number) {
     type = t;
     this->line_number = line_number;
     used = false;
+    createObfuscatedName();
 }
-
-/*JVariable::JVariable(const std::string &name, JType *type) {
-    this->name = name;
-    this->type = type;
-}*/
 
 JVariable::JVariable(const JVariable & other) {
     name = other.name;
     type = other.type;
+    oName = other.oName;
 }
 
 bool JVariable::isVariable() const {
@@ -101,12 +109,14 @@ JArray::JArray(JType* type, std::string ident, int line_number) {
     name = ident;
     this->line_number = line_number;
     this->type = type;
+    createObfuscatedName();
 }
 
 JArray::JArray(const JArray &other) {
     type = other.type;
     name = other.name;
     line_number = other.line_number;
+    oName = other.oName;
 }
 
 bool JArray::isArray() const {

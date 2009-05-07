@@ -53,7 +53,7 @@
 	<stdlib.h>
 	<stdio.h>
 
-1241175316 source:/home/frea/mrjp/Test.C
+1241698380 source:/home/frea/mrjp/Test.C
 	<stdio.h>
 	"Parser.H"
 	"Printer.H"
@@ -66,7 +66,7 @@
 
 1241109419 /home/frea/mrjp//include/JType.H
 
-1241441258 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
+1241698283 source:/home/frea/mrjp/analyzer/DeclarationVisitor.C
 	"DeclarationVisitor.H"
 	"ExpressionVisitor.H"
 
@@ -104,7 +104,7 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241279549 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
+1241698824 source:/home/frea/mrjp/analyzer/FunctionVisitor.C
 	"FunctionVisitor.H"
 
 1241277640 /home/frea/mrjp/include/FunctionVisitor.H
@@ -131,7 +131,7 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1241442743 source:/home/frea/mrjp/logger/Logger.C
+1241443718 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
 	"Logger.H"
 	"JType.H"
@@ -153,7 +153,7 @@
 	<list>
 	<iostream>
 
-1241281455 /home/frea/mrjp/include/Symbol.H
+1241697692 /home/frea/mrjp/include/Symbol.H
 	<string>
 	<vector>
 	"Absyn.H"
@@ -188,20 +188,27 @@
 1241187188 /home/frea/mrjp/include/JType.H
 	<string>
 
-1241277650 /home/frea/mrjp/include/DeclarationVisitor.H
+1241691833 /home/frea/mrjp/include/DeclarationVisitor.H
 	"Absyn.H"
 	"SymbolTable.H"
 	"Logger.H"
 
-1241285617 /home/frea/mrjp/include/ExpressionVisitor.H
+1241691695 /home/frea/mrjp/include/ExpressionVisitor.H
 	"Absyn.H"
 	"SymbolTable.H"
 	"Logger.H"
 	"Symbol.H"
 
-1241442103 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
+1241698816 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
 	"ExpressionVisitor.H"
 
-1241281468 source:/home/frea/mrjp/symbol/JSymbol.C
+1241698999 source:/home/frea/mrjp/symbol/JSymbol.C
 	"Symbol.H"
+	"ObfuseNames.H"
+
+1241698073 source:/home/frea/mrjp/analyzer/ObfuseNames.C
+	<sstream>
+	"ObfuseNames.H"
+
+1241697984 /home/frea/mrjp/include/ObfuseNames.H
 

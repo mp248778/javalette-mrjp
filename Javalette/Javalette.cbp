@@ -58,7 +58,19 @@
 		<Unit filename="../analyzer/InstructionVisitor.C">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../analyzer/ObfuseNames.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../analyzer/Stdfunc.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../codegen/DeclarationVisitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../codegen/ExpressionCodeGenerator.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../codegen/InstructionCodeGenerator.C">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../include/Absyn.H" />
@@ -68,6 +80,7 @@
 		<Unit filename="../include/InstructionVisitor.H" />
 		<Unit filename="../include/JType.H" />
 		<Unit filename="../include/Logger.H" />
+		<Unit filename="../include/ObfuseNames.H" />
 		<Unit filename="../include/Parser.H" />
 		<Unit filename="../include/Printer.H" />
 		<Unit filename="../include/Stdfunc.H" />
