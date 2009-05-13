@@ -7,22 +7,25 @@
 	<File name="../Test.C" open="0" top="0" tabpos="6">
 		<Cursor position="1486" topLine="2" />
 	</File>
-	<File name="../analyzer/DeclarationVisitor.C" open="0" top="0" tabpos="4">
-		<Cursor position="1571" topLine="19" />
+	<File name="../analyzer/DeclarationVisitor.C" open="1" top="0" tabpos="3">
+		<Cursor position="134" topLine="0" />
 	</File>
-	<File name="../analyzer/ExpressionVisitor.C" open="1" top="0" tabpos="6">
+	<File name="../analyzer/ExpressionVisitor.C" open="0" top="0" tabpos="6">
 		<Cursor position="7716" topLine="247" />
 	</File>
-	<File name="../analyzer/FunctionVisitor.C" open="0" top="0" tabpos="11">
-		<Cursor position="600" topLine="0" />
+	<File name="../analyzer/FunctionVisitor.C" open="1" top="0" tabpos="1">
+		<Cursor position="526" topLine="0" />
 	</File>
-	<File name="../analyzer/InstructionVisitor.C" open="1" top="0" tabpos="1">
-		<Cursor position="3294" topLine="92" />
+	<File name="../analyzer/InstructionVisitor.C" open="1" top="1" tabpos="2">
+		<Cursor position="4065" topLine="96" />
+	</File>
+	<File name="../analyzer/ObfuseNames.C" open="1" top="0" tabpos="4">
+		<Cursor position="225" topLine="0" />
 	</File>
 	<File name="../analyzer/Stdfunc.C" open="0" top="0" tabpos="3">
 		<Cursor position="10" topLine="0" />
 	</File>
-	<File name="../include/Absyn.H" open="1" top="0" tabpos="5">
+	<File name="../include/Absyn.H" open="0" top="0" tabpos="5">
 		<Cursor position="6245" topLine="218" />
 	</File>
 	<File name="../include/DeclarationVisitor.H" open="0" top="0" tabpos="13">
@@ -34,13 +37,13 @@
 	<File name="../include/FunctionVisitor.H" open="0" top="0" tabpos="15">
 		<Cursor position="1469" topLine="35" />
 	</File>
-	<File name="../include/InstructionVisitor.H" open="1" top="0" tabpos="2">
+	<File name="../include/InstructionVisitor.H" open="0" top="0" tabpos="2">
 		<Cursor position="391" topLine="0" />
 	</File>
 	<File name="../include/JType.H" open="0" top="0" tabpos="7">
 		<Cursor position="62" topLine="0" />
 	</File>
-	<File name="../include/Logger.H" open="1" top="0" tabpos="4">
+	<File name="../include/Logger.H" open="0" top="0" tabpos="4">
 		<Cursor position="21" topLine="0" />
 	</File>
 	<File name="../include/Parser.H" open="0" top="0" tabpos="1">
@@ -58,7 +61,7 @@
 	<File name="../lexer/Lexer.C" open="0" top="0" tabpos="4">
 		<Cursor position="18526" topLine="512" />
 	</File>
-	<File name="../logger/Logger.C" open="1" top="1" tabpos="3">
+	<File name="../logger/Logger.C" open="0" top="0" tabpos="3">
 		<Cursor position="738" topLine="0" />
 	</File>
 	<File name="../parser/Absyn.C" open="0" top="0" tabpos="5">

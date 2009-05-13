@@ -27,14 +27,8 @@ void FunctionVisitor::visitFunctionArg(FunctionArg *functionarg) {
     listarg.push_back(functionarg->type_->getJType());
 }
 
-void FunctionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
-    innerfunction->fundef_->accept(this);
-}
-
 void FunctionVisitor::visitListFunDef(ListFunDef* listfundef) {
-    for (ListFunDef::iterator i = listfundef->begin() ; i != listfundef->end() ; ++i) {
-        (*i)->accept(this);
-    }
+
 }
 
 void FunctionVisitor::visitListArg(ListArg* listarg) {
@@ -43,51 +37,53 @@ void FunctionVisitor::visitListArg(ListArg* listarg) {
     }
 }
 
-void FunctionVisitor::visitListInstr(ListInstr* listinstr) {
-    for (ListInstr::iterator i = listinstr->begin() ; i != listinstr->end() ; ++i) {
-        (*i)->accept(this);
-    }
-}
-
-void FunctionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
-    //noop
-}
-
-void FunctionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
-    //noop
-}
-
-void FunctionVisitor::visitDeclInstr(DeclInstr *declinstr) {
-    //noop
-}
-
-void FunctionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
-    //noop
-}
-
-void FunctionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
-    //noop
-}
-
-void FunctionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
-    //noop
-}
-
-void FunctionVisitor::visitForLoop(ForLoop *forloop) {
-    //noop
-}
-
-void FunctionVisitor::visitWhileLoop(WhileLoop *whileloop) {
-    //noop
-}
-
-void FunctionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
-    //noop
-}
-
 /******************************************************************************
 NOTHING MORE INTERESTING HERE
 ******************************************************************************/
+
+void FunctionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitListInstr(ListInstr* listinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitCompoundInstr(CompoundInstr *compundinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitReturnExprInstr(ReturnExprInstr *returnexprinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitDeclInstr(DeclInstr *declinstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitConditionalIf(ConditionalIf *conditionalif) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitConditionalIfElse(ConditionalIfElse *conditionalifelse) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitForLoop(ForLoop *forloop) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitWhileLoop(WhileLoop *whileloop) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
+
+void FunctionVisitor::visitReturnInstr(ReturnInstr *returninstr) {
+    logger.internalVisitorError(__FILE__, __LINE__);
+}
 
 void FunctionVisitor::visitIdentAssigment(IdentAssigment *p) {
     logger.internalVisitorError(__FILE__, __LINE__);

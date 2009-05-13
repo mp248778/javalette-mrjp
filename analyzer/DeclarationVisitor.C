@@ -1,6 +1,8 @@
 #include "DeclarationVisitor.H"
 #include "ExpressionVisitor.H"
 
+//w while nie sprawdac warunku konca, mozemy przeciez nigdy nie wejsc!
+
 
 DeclarationVisitor::DeclarationVisitor(SymbolTable<std::string, JSymbol> &st, Logger & logger) : st(st), logger(logger) {}
 

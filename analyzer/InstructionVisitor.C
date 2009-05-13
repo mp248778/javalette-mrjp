@@ -12,7 +12,9 @@ void InstructionVisitor::_registerReturn() {
 
 void InstructionVisitor::visitListFunDef(ListFunDef* listfundef) {
     FunctionVisitor fv(st, logger);
-    listfundef->accept(&fv);
+    for (ListFunDef::iterator i = listfundef->begin(); i != listfundef->end(); ++i ) {
+        (*i)->accept(&fv);
+    }
 
     for (ListFunDef::iterator i = listfundef->begin(); i != listfundef->end(); ++i ) {
         st.newScope();
@@ -22,8 +24,6 @@ void InstructionVisitor::visitListFunDef(ListFunDef* listfundef) {
 }
 
 void InstructionVisitor::visitListInstr(ListInstr* listinstr) {
-    FunctionVisitor fv(st, logger);
-    listinstr->accept(&fv);
     for (ListInstr::iterator i = listinstr->begin() ; i != listinstr->end() ; ++i) {
         if(pathFinishes.top()) {
             logger.unreachable(*i);
@@ -132,6 +132,8 @@ void InstructionVisitor::visitFunction(Function *function) {
 }
 
 void InstructionVisitor::visitInnerFunction(InnerFunction *innerfunction) {
+    FunctionVisitor fv(st, logger);
+    innerfunction->fundef_->accept(&fv);
     innerfunction->fundef_->accept(this);
 }
 
