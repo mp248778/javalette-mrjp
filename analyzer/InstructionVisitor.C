@@ -90,13 +90,12 @@ void InstructionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) 
 }
 
 void InstructionVisitor::visitForLoop(ForLoop *forloop) {
-    DeclarationVisitor dv(st, logger);
-    forloop->decl_->accept(&dv);
-
     ExpressionVisitor ev(st, logger);
-    forloop->expr_1->accept(&ev);
+    forloop->listexpr_1->accept(&ev);
     ExpressionVisitor ev2(st, logger);
-    forloop->expr_2->accept(&ev2);
+    forloop->listexpr_2->accept(&ev2);
+    ExpressionVisitor ev3(st, logger);
+    forloop->listexpr_3->accept(&ev3);
 
     forloop->instr_->accept(this);
 }

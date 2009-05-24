@@ -14,6 +14,7 @@ public:
     bool anyFatalErrors() const;
     void notAType(const std::string, int);
     void notANumeric(int);
+    void variableTypeIsVoid(int line_number);
     void notEqualTypes(const Expr*, const JType*, const JType*);
     void badAmountOfArguments(const FunctionCall*);
     void notAnArray(const std::string&, int line_number);

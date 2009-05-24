@@ -19,6 +19,8 @@ void DeclarationVisitor::_visitDeclaration(JSymbol *jv) {
 
 void DeclarationVisitor::visitDeclInstr(DeclInstr *declinstr) {
     currentType = declinstr->type_->getJType();
+    if(currentType->isVoid())
+	    logger.variableTypeIsVoid(declinstr->line_number);
     declinstr->listdecl_->accept(this);
     delete currentType;
 }
@@ -64,7 +66,10 @@ void DeclarationVisitor::visitFunction(Function *function) {
 }
 
 void DeclarationVisitor::visitFunctionArg(FunctionArg *functionarg) {
-    JVariable *jv = new JVariable(functionarg->type_->getJType(), functionarg->ident_, functionarg->line_number);
+    JType *jt = functionarg->type_->getJType();
+    if(jt->isVoid())
+	    logger.variableTypeIsVoid(functionarg->line_number);
+    JVariable *jv = new JVariable(jt, functionarg->ident_, functionarg->line_number);
     functionarg->ident_ = jv->getObfuscatedName();
     jv->initialize();
     _visitDeclaration(jv);

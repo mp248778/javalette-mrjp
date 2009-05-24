@@ -100,7 +100,6 @@ void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
         type = new JUnknownType();
     } else {
         const JVariable* jv = static_cast<const JVariable*>(s);
-        postdecrement->ident_ = jv->getObfuscatedName();
         if(!jv->getType()->isNumeric()) {
             logger.notANumeric(postdecrement->line_number);
             type = new JUnknownType();
@@ -110,6 +109,7 @@ void ExpressionVisitor::visitPostDecrement(PostDecrement *postdecrement) {
         } else {
             type = jv->getType()->clone();
         }
+        postdecrement->ident_ = jv->getObfuscatedName();
     }
     types.push(type);
 }
@@ -125,7 +125,6 @@ void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
         type = new JUnknownType();
     } else {
         const JVariable* jv = static_cast<const JVariable*>(s);
-        postincrement->ident_ = jv->getObfuscatedName();
         if(!jv->getType()->isNumeric()) {
             logger.notANumeric(postincrement->line_number);
             type = new JUnknownType();
@@ -135,6 +134,7 @@ void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
         } else {
             type = jv->getType()->clone();
         }
+        postincrement->ident_ = jv->getObfuscatedName();
     }
     types.push(type);
 }
@@ -282,7 +282,6 @@ void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
     const JSymbol *s = st.lookup(functioncall->ident_);
     if (s && s->isFunction()) {
         const JFunction *f = static_cast<const JFunction*>(s);
-        functioncall->ident_ = f->getObfuscatedName();
         if (f->getArguments().size() != functioncall->listexpr_->size()) {
             logger.badAmountOfArguments(functioncall);
             for (int i = functioncall->listexpr_->size(); i > 0; i--)
@@ -294,6 +293,7 @@ void ExpressionVisitor::visitFunctionCall(FunctionCall *functioncall) {
             }
         }
         type = f->getType()->clone();
+        functioncall->ident_ = f->getObfuscatedName();
     } else {
         for (int i = functioncall->listexpr_->size(); i > 0; i--)
             _pop();
@@ -322,6 +322,7 @@ void ExpressionVisitor::visitArrayAccess(ArrayAccess *arrayaccess) {
         type = new JUnknownType();
     } else if (!t->isInt()) {
         logger.notAType("int", arrayaccess->line_number);
+        type = new JUnknownType();
     } else {
         arrayaccess->ident_ = s->getObfuscatedName();
         type = s->getType()->clone();
@@ -341,9 +342,9 @@ void ExpressionVisitor::visitIdentExpr(IdentExpr *identexpr) {
         type = new JUnknownType();
     } else {
         const JVariable *jv = static_cast<const JVariable*>(s);
-        identexpr->ident_ = jv->getObfuscatedName();
         if (!jv->alreadyInitialized())
             logger.uninitializedValue(identexpr->ident_, identexpr->line_number);
+        identexpr->ident_ = jv->getObfuscatedName();
         type = jv->getType()->clone();
     }
     identexpr->jtype_ = type;

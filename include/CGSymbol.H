@@ -14,21 +14,23 @@
 
 
 class CGSymbol {
+public:
 };
 
 class CGVariable : public CGSymbol {
 public:
     std::string name;
     llvm::AllocaInst const * cgname;
-    int nestDepth;
-    CGVariable(const std::string&, llvm::AllocaInst const*, const int);
+    const int nestDepth;
+    const int index;
+    CGVariable(const std::string&, llvm::AllocaInst const*, const int, const int);
 };
 
 class CGFunction : public CGSymbol {
 public:
     std::string name;
     llvm::Function const * cgreturn;
-    int nestDepth;
+    const int nestDepth;
     CGFunction(const std::string&, llvm::Function const*, const int);
 };
 

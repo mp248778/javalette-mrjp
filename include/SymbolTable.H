@@ -4,6 +4,7 @@
 #include <map>
 #include <stack>
 #include <list>
+#include <vector>
 
 
 
@@ -16,6 +17,7 @@ public:
     value* lookup(const key &) const;
     void add(const key&, value*);
     bool definedInCurrentScope(const key&) const;
+    std::vector<const value*> getAll() const;
     void newScope();
     void delScope();
     ~SymbolTable();
@@ -55,6 +57,13 @@ SymbolTable<key, value>::SymbolTable() {
 template <class key, class value>
 SymbolTable<key, value>::~SymbolTable() {
     while(depth >= 0) delScope();
+}
+template <class key, class value>
+std::vector<const value*> SymbolTable<key, value>::getAll() const {
+    std::vector<const value*> vals;
+    for(stIt i = st.begin(); i != st.end(); ++i) {
+        vals.push_back((*i).top());
+    }
 }
 
 template <class key, class value>

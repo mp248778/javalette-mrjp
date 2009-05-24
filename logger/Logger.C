@@ -31,6 +31,11 @@ void Logger::notANumeric(int line_number) {
     fatal = true;
 }
 
+void Logger::variableTypeIsVoid(int line_number) {
+    std::cerr << ":" << line_number << ": variable type is void\n";
+    fatal = true;
+}
+
 void Logger::notEqualTypes(const Expr *e, const JType *t1, const JType *t2) {
     std::cerr << ":" << e->line_number << ": expression types do not match, got " << t1->toString() << " and " << t2->toString() << "\n";
     fatal = true;

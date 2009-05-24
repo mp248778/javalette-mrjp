@@ -21,8 +21,8 @@ private:
     SymbolTable<std::string, CGSymbol> st;
     llvm::Module *module;
     llvm::IRBuilder<> builder;
-    std::stack<llvm::BasicBlock*> entries;
     std::stack<bool> pathFinishes;
+    std::stack<int> variableCnt;
 public:
     Generator();
     virtual llvm::Value* visitProg(Prog *p);
@@ -50,9 +50,9 @@ public:
     virtual llvm::Value* visitExpressionInstr(ExpressionInstr *p);
     virtual llvm::Value* visitForLoop(ForLoop *p);
     virtual llvm::Value* visitWhileLoop(WhileLoop *p);
-    virtual llvm::Value* visitOnlyDeclarator(OnlyDeclarator *p);
-    virtual llvm::Value* visitInitDeclarator(InitDeclarator *p);
-    virtual llvm::Value* visitArrayDeclarator(ArrayDeclarator *p);
+    virtual llvm::Value* visitOnlyDeclarator(const llvm::Type*, OnlyDeclarator *p);
+    virtual llvm::Value* visitInitDeclarator(const llvm::Type*, InitDeclarator *p);
+    virtual llvm::Value* visitArrayDeclarator(const llvm::Type*, ArrayDeclarator *p);
     virtual llvm::Value* visitIdentAssigment(IdentAssigment *p);
     virtual llvm::Value* visitArrayAssigment(ArrayAssigment *p);
     virtual llvm::Value* visitPostDecrement(PostDecrement *p);
@@ -85,7 +85,7 @@ public:
     virtual llvm::Value* visitListFunDef(ListFunDef *p);
     virtual llvm::Value* visitListArg(ListArg *p);
     virtual llvm::Value* visitListInstr(ListInstr *p);
-    virtual llvm::Value* visitListDecl(ListDecl *p);
+    virtual llvm::Value* visitListDecl(const llvm::Type *, ListDecl *p);
     virtual llvm::Value* visitListExpr(ListExpr *p);
 
 

@@ -313,12 +313,9 @@ void PrintAbsyn::visitForLoop(ForLoop* p)
 
   render("for");
   render('(');
-  _i_ = 0; p->decl_->accept(this);
-  render(';');
-  _i_ = 0; p->expr_1->accept(this);
-  render(';');
-  _i_ = 0; p->expr_2->accept(this);
-  render(')');
+  if(p->listexpr_1) {_i_ = 0; p->listexpr_1->accept(this);}  render(';');
+  if(p->listexpr_2) {_i_ = 0; p->listexpr_2->accept(this);}  render(';');
+  if(p->listexpr_3) {_i_ = 0; p->listexpr_3->accept(this);}  render(')');
   _i_ = 0; p->instr_->accept(this);
 
   if (oldi > 0) render(_R_PAREN);
@@ -1045,13 +1042,11 @@ void ShowAbsyn::visitForLoop(ForLoop* p)
   bufAppend('(');
   bufAppend("ForLoop");
   bufAppend(' ');
-  bufAppend('[');
-  if (p->decl_)  p->decl_->accept(this);
-  bufAppend(']');
+  p->listexpr_1->accept(this);
   bufAppend(' ');
-  p->expr_1->accept(this);
+  p->listexpr_2->accept(this);
   bufAppend(' ');
-  p->expr_2->accept(this);
+  p->listexpr_3->accept(this);
   bufAppend(' ');
   bufAppend('[');
   if (p->instr_)  p->instr_->accept(this);
