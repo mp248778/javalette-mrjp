@@ -18,7 +18,7 @@ DeclInstr.		Instr	::=	Type [Decl] ";" ;
 ConditionalIf.		Instr	::=	"if" "(" Expr ")" Instr;
 ConditionalIfElse.	Instr	::=	"if" "(" Expr ")" Instr "else" Instr ;
 ExpressionInstr.	Instr	::=	Expr ";" ;
-ForLoop.		Instr	::=	"for" "(" Decl ";" Expr ";" Expr ")" Instr ;
+ForLoop.		Instr	::=	"for" "(" [Expr] ";" [Expr] ";" [Expr] ")" Instr ;
 WhileLoop.		Instr	::=	"while" "(" Expr ")" Instr ;
 
 OnlyDeclarator.		Decl	::=	Ident ;

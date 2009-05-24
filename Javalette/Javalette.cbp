@@ -64,16 +64,15 @@
 		<Unit filename="../analyzer/Stdfunc.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../codegen/DeclarationVisitor.C">
+		<Unit filename="../codegen/CGSymbol.C">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../codegen/ExpressionCodeGenerator.C">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../codegen/InstructionCodeGenerator.C">
+		<Unit filename="../codegen/Codegen.C">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../include/Absyn.H" />
+		<Unit filename="../include/CGSymbol.H" />
+		<Unit filename="../include/Codegen.H" />
 		<Unit filename="../include/DeclarationVisitor.H" />
 		<Unit filename="../include/ExpressionVisitor.H" />
 		<Unit filename="../include/FunctionVisitor.H" />

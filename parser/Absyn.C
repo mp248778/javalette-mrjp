@@ -40,6 +40,11 @@ void Program::accept(Visitor *v)
 {
   v->visitProgram(this);
 }
+llvm::Value* Program::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitProgram(this);
+}
+
 
 Program *Program::clone() const
 {
@@ -55,7 +60,6 @@ Function::Function(Type *p1, Ident p2, ListArg *p3, Instr *p4)
   ident_ = p2;
   listarg_ = p3;
   instr_ = p4;
-
 }
 
 Function::Function(const Function & other)
@@ -95,6 +99,11 @@ void Function::accept(Visitor *v)
 {
   v->visitFunction(this);
 }
+llvm::Value* Function::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitFunction(this);
+}
+
 
 Function *Function::clone() const
 {
@@ -118,6 +127,10 @@ JType* IntType::getJType() const {
     return new JInt();
 }
 
+const llvm::Type* IntType::getLLVMType() const {
+	return llvm::Type::Int32Ty;
+}
+
 IntType &IntType::operator=(const IntType & other)
 {
   IntType tmp(other);
@@ -139,6 +152,11 @@ void IntType::accept(Visitor *v)
 {
   v->visitIntType(this);
 }
+llvm::Value* IntType::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitIntType(this);
+}
+
 
 IntType *IntType::clone() const
 {
@@ -162,6 +180,11 @@ JType* DoubleType::getJType() const {
     return new JDouble();
 }
 
+const llvm::Type* DoubleType::getLLVMType() const {
+	return llvm::Type::DoubleTy;
+}
+
+
 DoubleType &DoubleType::operator=(const DoubleType & other)
 {
   DoubleType tmp(other);
@@ -183,6 +206,11 @@ void DoubleType::accept(Visitor *v)
 {
   v->visitDoubleType(this);
 }
+llvm::Value* DoubleType::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitDoubleType(this);
+}
+
 
 DoubleType *DoubleType::clone() const
 {
@@ -206,6 +234,11 @@ JType* VoidType::getJType() const {
     return new JVoid();
 }
 
+const llvm::Type* VoidType::getLLVMType() const {
+	return llvm::Type::VoidTy;
+}
+
+
 VoidType &VoidType::operator=(const VoidType & other)
 {
   VoidType tmp(other);
@@ -227,6 +260,11 @@ void VoidType::accept(Visitor *v)
 {
   v->visitVoidType(this);
 }
+llvm::Value* VoidType::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitVoidType(this);
+}
+
 
 VoidType *VoidType::clone() const
 {
@@ -250,6 +288,11 @@ JType* BoolType::getJType() const {
     return new JBool();
 }
 
+const llvm::Type* BoolType::getLLVMType() const {
+	return llvm::Type::Int1Ty;
+}
+
+
 BoolType &BoolType::operator=(const BoolType & other)
 {
   BoolType tmp(other);
@@ -271,6 +314,11 @@ void BoolType::accept(Visitor *v)
 {
   v->visitBoolType(this);
 }
+llvm::Value* BoolType::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitBoolType(this);
+}
+
 
 BoolType *BoolType::clone() const
 {
@@ -318,6 +366,11 @@ void FunctionArg::accept(Visitor *v)
 {
   v->visitFunctionArg(this);
 }
+llvm::Value* FunctionArg::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitFunctionArg(this);
+}
+
 
 FunctionArg *FunctionArg::clone() const
 {
@@ -330,7 +383,6 @@ FunctionArg *FunctionArg::clone() const
 CompoundInstr::CompoundInstr(ListInstr *p1)
 {
   listinstr_ = p1;
-
 }
 
 CompoundInstr::CompoundInstr(const CompoundInstr & other)
@@ -362,6 +414,11 @@ void CompoundInstr::accept(Visitor *v)
 {
   v->visitCompoundInstr(this);
 }
+llvm::Value* CompoundInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitCompoundInstr(this);
+}
+
 
 CompoundInstr *CompoundInstr::clone() const
 {
@@ -406,6 +463,11 @@ void InnerFunction::accept(Visitor *v)
 {
   v->visitInnerFunction(this);
 }
+llvm::Value* InnerFunction::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitInnerFunction(this);
+}
+
 
 InnerFunction *InnerFunction::clone() const
 {
@@ -446,6 +508,11 @@ void ReturnInstr::accept(Visitor *v)
 {
   v->visitReturnInstr(this);
 }
+llvm::Value* ReturnInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitReturnInstr(this);
+}
+
 
 ReturnInstr *ReturnInstr::clone() const
 {
@@ -490,6 +557,11 @@ void ReturnExprInstr::accept(Visitor *v)
 {
   v->visitReturnExprInstr(this);
 }
+llvm::Value* ReturnExprInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitReturnExprInstr(this);
+}
+
 
 ReturnExprInstr *ReturnExprInstr::clone() const
 {
@@ -538,6 +610,11 @@ void DeclInstr::accept(Visitor *v)
 {
   v->visitDeclInstr(this);
 }
+llvm::Value* DeclInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitDeclInstr(this);
+}
+
 
 DeclInstr *DeclInstr::clone() const
 {
@@ -551,7 +628,6 @@ ConditionalIf::ConditionalIf(Expr *p1, Instr *p2)
 {
   expr_ = p1;
   instr_ = p2;
-
 }
 
 ConditionalIf::ConditionalIf(const ConditionalIf & other)
@@ -586,6 +662,11 @@ void ConditionalIf::accept(Visitor *v)
 {
   v->visitConditionalIf(this);
 }
+llvm::Value* ConditionalIf::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitConditionalIf(this);
+}
+
 
 ConditionalIf *ConditionalIf::clone() const
 {
@@ -600,7 +681,6 @@ ConditionalIfElse::ConditionalIfElse(Expr *p1, Instr *p2, Instr *p3)
   expr_ = p1;
   instr_1 = p2;
   instr_2 = p3;
-
 }
 
 ConditionalIfElse::ConditionalIfElse(const ConditionalIfElse & other)
@@ -638,6 +718,11 @@ void ConditionalIfElse::accept(Visitor *v)
 {
   v->visitConditionalIfElse(this);
 }
+llvm::Value* ConditionalIfElse::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitConditionalIfElse(this);
+}
+
 
 ConditionalIfElse *ConditionalIfElse::clone() const
 {
@@ -683,6 +768,12 @@ void ExpressionInstr::accept(Visitor *v)
   v->visitExpressionInstr(this);
 }
 
+llvm::Value* ExpressionInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitExpressionInstr(this);
+}
+
+
 ExpressionInstr *ExpressionInstr::clone() const
 {
   return new ExpressionInstr(*this);
@@ -697,7 +788,6 @@ ForLoop::ForLoop(Decl *p1, Expr *p2, Expr *p3, Instr *p4)
   expr_1 = p2;
   expr_2 = p3;
   instr_ = p4;
-
 }
 
 ForLoop::ForLoop(const ForLoop & other)
@@ -738,6 +828,11 @@ void ForLoop::accept(Visitor *v)
 {
   v->visitForLoop(this);
 }
+llvm::Value* ForLoop::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitForLoop(this);
+}
+
 
 ForLoop *ForLoop::clone() const
 {
@@ -751,7 +846,6 @@ WhileLoop::WhileLoop(Expr *p1, Instr *p2)
 {
   expr_ = p1;
   instr_ = p2;
-
 }
 
 WhileLoop::WhileLoop(const WhileLoop & other)
@@ -786,6 +880,11 @@ void WhileLoop::accept(Visitor *v)
 {
   v->visitWhileLoop(this);
 }
+llvm::Value* WhileLoop::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitWhileLoop(this);
+}
+
 
 WhileLoop *WhileLoop::clone() const
 {
@@ -829,6 +928,11 @@ void OnlyDeclarator::accept(Visitor *v)
 {
   v->visitOnlyDeclarator(this);
 }
+llvm::Value* OnlyDeclarator::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitOnlyDeclarator(this);
+}
+
 
 OnlyDeclarator *OnlyDeclarator::clone() const
 {
@@ -876,6 +980,11 @@ void InitDeclarator::accept(Visitor *v)
 {
   v->visitInitDeclarator(this);
 }
+llvm::Value* InitDeclarator::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitInitDeclarator(this);
+}
+
 
 InitDeclarator *InitDeclarator::clone() const
 {
@@ -923,6 +1032,11 @@ void ArrayDeclarator::accept(Visitor *v)
 {
   v->visitArrayDeclarator(this);
 }
+llvm::Value* ArrayDeclarator::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitArrayDeclarator(this);
+}
+
 
 ArrayDeclarator *ArrayDeclarator::clone() const
 {
@@ -970,6 +1084,11 @@ void IdentAssigment::accept(Visitor *v)
 {
   v->visitIdentAssigment(this);
 }
+llvm::Value* IdentAssigment::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitIdentAssigment(this);
+}
+
 
 IdentAssigment *IdentAssigment::clone() const
 {
@@ -1021,6 +1140,11 @@ void ArrayAssigment::accept(Visitor *v)
 {
   v->visitArrayAssigment(this);
 }
+llvm::Value* ArrayAssigment::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitArrayAssigment(this);
+}
+
 
 ArrayAssigment *ArrayAssigment::clone() const
 {
@@ -1064,6 +1188,11 @@ void PostDecrement::accept(Visitor *v)
 {
   v->visitPostDecrement(this);
 }
+llvm::Value* PostDecrement::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitPostDecrement(this);
+}
+
 
 PostDecrement *PostDecrement::clone() const
 {
@@ -1107,6 +1236,11 @@ void PostIncrement::accept(Visitor *v)
 {
   v->visitPostIncrement(this);
 }
+llvm::Value* PostIncrement::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitPostIncrement(this);
+}
+
 
 PostIncrement *PostIncrement::clone() const
 {
@@ -1155,6 +1289,11 @@ void Cast::accept(Visitor *v)
 {
   v->visitCast(this);
 }
+llvm::Value* Cast::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitCast(this);
+}
+
 
 Cast *Cast::clone() const
 {
@@ -1203,6 +1342,11 @@ void LogExprOr::accept(Visitor *v)
 {
   v->visitLogExprOr(this);
 }
+llvm::Value* LogExprOr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLogExprOr(this);
+}
+
 
 LogExprOr *LogExprOr::clone() const
 {
@@ -1251,6 +1395,11 @@ void LogExprAnd::accept(Visitor *v)
 {
   v->visitLogExprAnd(this);
 }
+llvm::Value* LogExprAnd::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLogExprAnd(this);
+}
+
 
 LogExprAnd *LogExprAnd::clone() const
 {
@@ -1299,6 +1448,11 @@ void LogExprEq::accept(Visitor *v)
 {
   v->visitLogExprEq(this);
 }
+llvm::Value* LogExprEq::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLogExprEq(this);
+}
+
 
 LogExprEq *LogExprEq::clone() const
 {
@@ -1347,6 +1501,11 @@ void LogExprNeq::accept(Visitor *v)
 {
   v->visitLogExprNeq(this);
 }
+llvm::Value* LogExprNeq::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLogExprNeq(this);
+}
+
 
 LogExprNeq *LogExprNeq::clone() const
 {
@@ -1395,6 +1554,11 @@ void RelExprL::accept(Visitor *v)
 {
   v->visitRelExprL(this);
 }
+llvm::Value* RelExprL::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitRelExprL(this);
+}
+
 
 RelExprL *RelExprL::clone() const
 {
@@ -1443,6 +1607,11 @@ void RelExprG::accept(Visitor *v)
 {
   v->visitRelExprG(this);
 }
+llvm::Value* RelExprG::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitRelExprG(this);
+}
+
 
 RelExprG *RelExprG::clone() const
 {
@@ -1491,6 +1660,11 @@ void RelExprLe::accept(Visitor *v)
 {
   v->visitRelExprLe(this);
 }
+llvm::Value* RelExprLe::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitRelExprLe(this);
+}
+
 
 RelExprLe *RelExprLe::clone() const
 {
@@ -1539,6 +1713,11 @@ void RelExprGe::accept(Visitor *v)
 {
   v->visitRelExprGe(this);
 }
+llvm::Value* RelExprGe::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitRelExprGe(this);
+}
+
 
 RelExprGe *RelExprGe::clone() const
 {
@@ -1587,6 +1766,11 @@ void AddExpr::accept(Visitor *v)
 {
   v->visitAddExpr(this);
 }
+llvm::Value* AddExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitAddExpr(this);
+}
+
 
 AddExpr *AddExpr::clone() const
 {
@@ -1635,6 +1819,11 @@ void DecExpr::accept(Visitor *v)
 {
   v->visitDecExpr(this);
 }
+llvm::Value* DecExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitDecExpr(this);
+}
+
 
 DecExpr *DecExpr::clone() const
 {
@@ -1683,6 +1872,11 @@ void MulExpr::accept(Visitor *v)
 {
   v->visitMulExpr(this);
 }
+llvm::Value* MulExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitMulExpr(this);
+}
+
 
 MulExpr *MulExpr::clone() const
 {
@@ -1731,6 +1925,11 @@ void DivExpr::accept(Visitor *v)
 {
   v->visitDivExpr(this);
 }
+llvm::Value* DivExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitDivExpr(this);
+}
+
 
 DivExpr *DivExpr::clone() const
 {
@@ -1779,6 +1978,11 @@ void ModExpr::accept(Visitor *v)
 {
   v->visitModExpr(this);
 }
+llvm::Value* ModExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitModExpr(this);
+}
+
 
 ModExpr *ModExpr::clone() const
 {
@@ -1823,6 +2027,11 @@ void NegExpr::accept(Visitor *v)
 {
   v->visitNegExpr(this);
 }
+llvm::Value* NegExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitNegExpr(this);
+}
+
 
 NegExpr *NegExpr::clone() const
 {
@@ -1867,6 +2076,11 @@ void PlusExpr::accept(Visitor *v)
 {
   v->visitPlusExpr(this);
 }
+llvm::Value* PlusExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitPlusExpr(this);
+}
+
 
 PlusExpr *PlusExpr::clone() const
 {
@@ -1911,6 +2125,11 @@ void MinusExpr::accept(Visitor *v)
 {
   v->visitMinusExpr(this);
 }
+llvm::Value* MinusExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitMinusExpr(this);
+}
+
 
 MinusExpr *MinusExpr::clone() const
 {
@@ -1958,6 +2177,11 @@ void FunctionCall::accept(Visitor *v)
 {
   v->visitFunctionCall(this);
 }
+llvm::Value* FunctionCall::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitFunctionCall(this);
+}
+
 
 FunctionCall *FunctionCall::clone() const
 {
@@ -2005,6 +2229,11 @@ void ArrayAccess::accept(Visitor *v)
 {
   v->visitArrayAccess(this);
 }
+llvm::Value* ArrayAccess::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitArrayAccess(this);
+}
+
 
 ArrayAccess *ArrayAccess::clone() const
 {
@@ -2048,6 +2277,11 @@ void IdentExpr::accept(Visitor *v)
 {
   v->visitIdentExpr(this);
 }
+llvm::Value* IdentExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitIdentExpr(this);
+}
+
 
 IdentExpr *IdentExpr::clone() const
 {
@@ -2092,6 +2326,11 @@ void LiteralExpr::accept(Visitor *v)
 {
   v->visitLiteralExpr(this);
 }
+llvm::Value* LiteralExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLiteralExpr(this);
+}
+
 
 LiteralExpr *LiteralExpr::clone() const
 {
@@ -2135,6 +2374,11 @@ void LiteralInteger::accept(Visitor *v)
 {
   v->visitLiteralInteger(this);
 }
+llvm::Value* LiteralInteger::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLiteralInteger(this);
+}
+
 
 LiteralInteger *LiteralInteger::clone() const
 {
@@ -2178,6 +2422,11 @@ void LiteralDouble::accept(Visitor *v)
 {
   v->visitLiteralDouble(this);
 }
+llvm::Value* LiteralDouble::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLiteralDouble(this);
+}
+
 
 LiteralDouble *LiteralDouble::clone() const
 {
@@ -2221,6 +2470,11 @@ void LiteralString::accept(Visitor *v)
 {
   v->visitLiteralString(this);
 }
+llvm::Value* LiteralString::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLiteralString(this);
+}
+
 
 LiteralString *LiteralString::clone() const
 {
@@ -2264,6 +2518,11 @@ void LiteralBoolean::accept(Visitor *v)
 {
   v->visitLiteralBoolean(this);
 }
+llvm::Value* LiteralBoolean::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitLiteralBoolean(this);
+}
+
 
 LiteralBoolean *LiteralBoolean::clone() const
 {
@@ -2279,6 +2538,11 @@ void ListFunDef::accept(Visitor *v)
 {
   v->visitListFunDef(this);
 }
+llvm::Value* ListFunDef::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitListFunDef(this);
+}
+
 
 
 ListFunDef *ListFunDef::clone() const
@@ -2293,6 +2557,11 @@ void ListArg::accept(Visitor *v)
 {
   v->visitListArg(this);
 }
+llvm::Value* ListArg::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitListArg(this);
+}
+
 
 
 ListArg *ListArg::clone() const
@@ -2307,6 +2576,11 @@ void ListInstr::accept(Visitor *v)
 {
   v->visitListInstr(this);
 }
+llvm::Value* ListInstr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitListInstr(this);
+}
+
 
 
 ListInstr *ListInstr::clone() const
@@ -2321,6 +2595,11 @@ void ListDecl::accept(Visitor *v)
 {
   v->visitListDecl(this);
 }
+llvm::Value* ListDecl::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitListDecl(this);
+}
+
 
 
 ListDecl *ListDecl::clone() const
@@ -2335,6 +2614,11 @@ void ListExpr::accept(Visitor *v)
 {
   v->visitListExpr(this);
 }
+llvm::Value* ListExpr::genCode(CodeGeneratorVisitor* v)
+{
+  return v->visitListExpr(this);
+}
+
 
 
 ListExpr *ListExpr::clone() const

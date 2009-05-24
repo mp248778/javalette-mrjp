@@ -13,6 +13,7 @@
 #include "Logger.H"
 #include "InstructionVisitor.H"
 #include "Stdfunc.H"
+#include "Codegen.H"
 
 int main(int argc, char ** argv) {
     FILE *input;
@@ -40,6 +41,8 @@ int main(int argc, char ** argv) {
         printf("[Linearized Tree]\n");
         PrintAbsyn *p = new PrintAbsyn();
         printf("%s\n\n", p->print(parse_tree));
+        Generator gen;
+        parse_tree->genCode(&gen);
         return 0;
     }
     return 1;
