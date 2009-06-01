@@ -86,7 +86,7 @@ public:
     virtual llvm::Value* visitListArg(ListArg *p);
     virtual llvm::Value* visitListInstr(ListInstr *p);
     virtual llvm::Value* visitListDecl(const llvm::Type *, ListDecl *p);
-    virtual llvm::Value* visitListExpr(ListExpr *p);
+    virtual llvm::Value* visitListExpr(ListExpr *p, llvm::Function*);
 
 
     virtual llvm::Value* visitInteger(Integer x);

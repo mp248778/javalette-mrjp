@@ -14,6 +14,7 @@
 #include "InstructionVisitor.H"
 #include "Stdfunc.H"
 #include "Codegen.H"
+#include "ObfuseNames.H"
 
 int main(int argc, char ** argv) {
     FILE *input;
@@ -31,6 +32,7 @@ int main(int argc, char ** argv) {
         SymbolTable<std::string, JSymbol> st;
         Logger logger;
         populateSymbolTable(st);
+	ObfuseNames::toggle();
         InstructionVisitor iv(st, logger);
         parse_tree->accept(&iv);
         if (logger.anyFatalErrors()) return 1;

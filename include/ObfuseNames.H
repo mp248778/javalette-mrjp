@@ -3,11 +3,13 @@
 
 class ObfuseNames {
 private:
-    unsigned static symbolsCnt;
+    static bool turnedOn;
+    static unsigned symbolsCnt;
     ObfuseNames();
 public:
     static std::string obfuscate(const std::string&);
     static void resetCount();
+    static void toggle();
 };
 
 

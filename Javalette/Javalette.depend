@@ -12,10 +12,11 @@
 	<string.h>
 	<stdlib.h>
 
-1243152365 /home/frea/mrjp/include/Absyn.H
+1243853149 /home/frea/mrjp/include/Absyn.H
 	<string>
 	<vector>
 	"llvm/DerivedTypes.h"
+	"llvm/Function.h"
 	"JType.H"
 
 1243140150 source:/home/frea/mrjp/lexer/Lexer.C
@@ -32,7 +33,7 @@
 	<vector>
 	<string>
 
-1243152775 source:/home/frea/mrjp/parser/Absyn.C
+1243853299 source:/home/frea/mrjp/parser/Absyn.C
 	<algorithm>
 	<string>
 	<iostream>
@@ -54,7 +55,7 @@
 	<stdlib.h>
 	<stdio.h>
 
-1243140150 source:/home/frea/mrjp/Test.C
+1243844059 source:/home/frea/mrjp/Test.C
 	<stdio.h>
 	"Parser.H"
 	"Printer.H"
@@ -65,6 +66,7 @@
 	"InstructionVisitor.H"
 	"Stdfunc.H"
 	"Codegen.H"
+	"ObfuseNames.H"
 
 1241109419 /home/frea/mrjp//include/JType.H
 
@@ -115,7 +117,7 @@
 	"Logger.H"
 	"Symbol.H"
 
-1243140560 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
+1243846254 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
 	"InstructionVisitor.H"
 	"FunctionVisitor.H"
 	"ExpressionVisitor.H"
@@ -133,7 +135,7 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1243174399 source:/home/frea/mrjp/logger/Logger.C
+1243846557 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
 	"Logger.H"
 	"JType.H"
@@ -162,7 +164,7 @@
 	"Absyn.H"
 	"JType.H"
 
-1243174292 /home/frea/mrjp/include/Logger.H
+1243846200 /home/frea/mrjp/include/Logger.H
 	"Symbol.H"
 
 1243140150 /home/frea/mrjp/include/InstructionVisitor.H
@@ -209,12 +211,12 @@
 	"Symbol.H"
 	"ObfuseNames.H"
 
-1243140150 source:/home/frea/mrjp/analyzer/ObfuseNames.C
+1243843141 source:/home/frea/mrjp/analyzer/ObfuseNames.C
 	<sstream>
 	<iostream>
 	"ObfuseNames.H"
 
-1243140150 /home/frea/mrjp/include/ObfuseNames.H
+1243843087 /home/frea/mrjp/include/ObfuseNames.H
 
 1241699846 source:/home/frea/mrjp/codegen/DeclarationVisitor.C
 
@@ -222,11 +224,11 @@
 
 1241699708 source:/home/frea/mrjp/codegen/InstructionCodeGenerator.C
 
-1243837036 source:/home/frea/mrjp/codegen/Codegen.C
+1243853205 source:/home/frea/mrjp/codegen/Codegen.C
 	"Codegen.H"
 	"SymbolTable.H"
 
-1243161644 /home/frea/mrjp/include/Codegen.H
+1243852661 /home/frea/mrjp/include/Codegen.H
 	"Absyn.H"
 	"SymbolTable.H"
 	"CGSymbol.H"
@@ -239,7 +241,7 @@
 	"llvm/Transforms/Scalar.h"
 	"llvm/Support/IRBuilder.h"
 
-1243164168 /home/frea/mrjp/include/CGSymbol.H
+1243847356 /home/frea/mrjp/include/CGSymbol.H
 	"llvm/DerivedTypes.h"
 	"llvm/ExecutionEngine/ExecutionEngine.h"
 	"llvm/Module.h"
@@ -250,6 +252,6 @@
 	"llvm/Transforms/Scalar.h"
 	"llvm/Support/IRBuilder.h"
 
-1243164184 source:/home/frea/mrjp/codegen/CGSymbol.C
+1243847331 source:/home/frea/mrjp/codegen/CGSymbol.C
 	"CGSymbol.H"
 

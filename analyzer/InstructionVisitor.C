@@ -90,6 +90,9 @@ void InstructionVisitor::visitExpressionInstr(ExpressionInstr *expressioninstr) 
 }
 
 void InstructionVisitor::visitForLoop(ForLoop *forloop) {
+    if(forloop->listexpr_1->size() > 1 || forloop->listexpr_2->size() > 1 ||
+		    forloop->listexpr_3->size() > 1)
+        logger.tooManyExpressions(forloop);
     ExpressionVisitor ev(st, logger);
     forloop->listexpr_1->accept(&ev);
     ExpressionVisitor ev2(st, logger);

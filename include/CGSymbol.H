@@ -20,18 +20,18 @@ public:
 class CGVariable : public CGSymbol {
 public:
     std::string name;
-    llvm::AllocaInst const * cgname;
+    llvm::AllocaInst *cgname;
     const int nestDepth;
     const int index;
-    CGVariable(const std::string&, llvm::AllocaInst const*, const int, const int);
+    CGVariable(const std::string&, llvm::AllocaInst*, const int, const int);
 };
 
 class CGFunction : public CGSymbol {
 public:
     std::string name;
-    llvm::Function const * cgreturn;
+    llvm::Function *cgreturn;
     const int nestDepth;
-    CGFunction(const std::string&, llvm::Function const*, const int);
+    CGFunction(const std::string&, llvm::Function*, const int);
 };
 
 #endif

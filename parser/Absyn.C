@@ -2582,8 +2582,15 @@ llvm::Value* ListDecl::genCode(CodeGeneratorVisitor *v) {
 /********************   ListExpr    ********************/
 
 llvm::Value* ListExpr::genCode(CodeGeneratorVisitor* v) {
-    return v->visitListExpr(this);
+    std::cerr << "internal error " << __FILE__ << " " << __LINE__ << "\n";
+    exit(1);
+    return NULL;
 }
+
+llvm::Value* ListExpr::genCode(CodeGeneratorVisitor* v, llvm::Function* f) {
+    return v->visitListExpr(this, f);
+}
+
 
 void ListExpr::accept(Visitor *v)
 {

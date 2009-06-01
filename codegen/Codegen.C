@@ -105,6 +105,7 @@ llvm::Value* Generator::visitOnlyDeclarator(const llvm::Type *type, OnlyDeclarat
     return NULL;
 }
 
+
 llvm::Value* Generator::visitInitDeclarator(const llvm::Type *type, InitDeclarator *p) {
     llvm::Value *val = p->expr_->genCode(this);
     llvm::AllocaInst *var = builder.CreateAlloca(type, 0, p->ident_.c_str());
@@ -135,9 +136,8 @@ llvm::Value* Generator::visitConditionalIf(ConditionalIf *p) {
     llvm::BasicBlock *after = llvm::BasicBlock::Create("ifafter");
 
     llvm::Value *val = p->expr_->genCode(this);
-    llvm::Value *loaded = builder.CreateLoad(val);
 
-    builder.CreateCondBr(loaded, body, after);
+    builder.CreateCondBr(val, body, after);
 
     builder.SetInsertPoint(body);
     pathFinishes.push(false);
@@ -160,18 +160,15 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
     llvm::Function *f = builder.GetInsertBlock()->getParent();
     llvm::BasicBlock *true_body = llvm::BasicBlock::Create("true_body", f);
     llvm::BasicBlock *false_body = llvm::BasicBlock::Create("false_body");
-    llvm::BasicBlock *after = llvm::BasicBlock::Create("ifelseafter");
 
     llvm::Value *val = p->expr_->genCode(this);
-    llvm::Value *loaded = builder.CreateLoad(val);
 
-    builder.CreateCondBr(loaded, true_body, false_body);
+    builder.CreateCondBr(val, true_body, false_body);
 
     builder.SetInsertPoint(true_body);
     pathFinishes.push(false);
     p->instr_1->genCode(this);
-    if(!(out1 = pathFinishes.top()))
-            builder.CreateBr(after);
+    out1 = pathFinishes.top();
     pathFinishes.pop();
 
     f->getBasicBlockList().push_back(false_body);
@@ -180,14 +177,23 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
     pathFinishes.push(false);
     p->instr_2->genCode(this);
 
-    if(!(out2 = pathFinishes.top()))
-            builder.CreateBr(after);
+    out2 = pathFinishes.top();
     pathFinishes.pop();
 
     pathFinishes.pop();
     pathFinishes.push(out1 && out2);
-
-
+    if(out1 && out2) {
+        return NULL;
+    }
+    llvm::BasicBlock *after = llvm::BasicBlock::Create("ifelseafter");
+    if(!out1) {
+        builder.SetInsertPoint(true_body);
+        builder.CreateBr(after);
+    }
+    else if(!out2) {
+        builder.SetInsertPoint(false_body);
+        builder.CreateBr(after);
+    }
     f->getBasicBlockList().push_back(after);
     builder.SetInsertPoint(after);
 
@@ -246,7 +252,7 @@ llvm::Value* Generator::visitLogExprOr(LogExprOr *p) {
     builder.CreateBr(merge);
 
     f->getBasicBlockList().push_back(merge);
-    f->SetInsertPoint(merge);
+    builder.SetInsertPoint(merge);
 
     return builder.CreateLoad(var);
 }
@@ -267,7 +273,7 @@ llvm::Value* Generator::visitLogExprAnd(LogExprAnd *p) {
     builder.CreateBr(merge);
 
     f->getBasicBlockList().push_back(merge);
-    f->SetInsertPoint(merge);
+    builder.SetInsertPoint(merge);
 
     return builder.CreateLoad(var);
 }
@@ -275,7 +281,7 @@ llvm::Value* Generator::visitLogExprAnd(LogExprAnd *p) {
 llvm::Value* Generator::visitLogExprEq(LogExprEq *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
     llvm::Value *e2 = p->expr_2->genCode(this);
-    if(e1->expr_1->isInt())
+    if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpEQ(e1, e2, "ieqcmp");
     else
         return builder.CreateFCmpOEQ(e1, e2, "feqcmp");
@@ -284,15 +290,15 @@ llvm::Value* Generator::visitLogExprEq(LogExprEq *p) {
 llvm::Value* Generator::visitLogExprNeq(LogExprNeq *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
     llvm::Value *e2 = p->expr_2->genCode(this);
-    if(e1->expr_1->isInt())
+    if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpNE(e1, e2, "ineqcmp");
     else
         return builder.CreateFCmpONE(e1, e2, "feqcmp");
 }
 
 llvm::Value* Generator::visitRelExprL(RelExprL *p) {
-    Value *e1 = p->expr_1->genCode(this);
-    Value *e2 = p->expr_2->genCode(this);
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpSLT(e1, e2, "igetmp");
     else
@@ -300,8 +306,8 @@ llvm::Value* Generator::visitRelExprL(RelExprL *p) {
 }
 
 llvm::Value* Generator::visitRelExprG(RelExprG *p) {
-    Value *e1 = p->expr_1->genCode(this);
-    Value *e2 = p->expr_2->genCode(this);
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpSGT(e1, e2, "igetmp");
     else
@@ -309,8 +315,8 @@ llvm::Value* Generator::visitRelExprG(RelExprG *p) {
 }
 
 llvm::Value* Generator::visitRelExprLe(RelExprLe *p) {
-    Value *e1 = p->expr_1->genCode(this);
-    Value *e2 = p->expr_2->genCode(this);
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpSLE(e1, e2, "igetmp");
     else
@@ -318,8 +324,8 @@ llvm::Value* Generator::visitRelExprLe(RelExprLe *p) {
 }
 
 llvm::Value* Generator::visitRelExprGe(RelExprGe *p) {
-    Value *e1 = p->expr_1->genCode(this);
-    Value *e2 = p->expr_2->genCode(this);
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpSGE(e1, e2, "igetmp");
     else
@@ -335,6 +341,22 @@ llvm::Value* Generator::visitAddExpr(AddExpr *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
     llvm::Value *e2 = p->expr_2->genCode(this);
     return builder.CreateAdd(e1, e2, "addtmp");
+}
+
+llvm::Value* Generator::visitPostDecrement(PostDecrement *p) {
+    llvm::AllocaInst *var = (static_cast<CGVariable*>(st.lookup(p->ident_)))->cgname;
+    llvm::Value *old = builder.CreateLoad(var, "tmpvar");
+    llvm::Value *newer = builder.CreateSub(old, llvm::ConstantInt::get(llvm::APInt(32, 1)), "tmpvar");
+    builder.CreateStore(newer, var);
+    return old;
+}
+
+llvm::Value* Generator::visitPostIncrement(PostIncrement *p) {
+    llvm::AllocaInst *var = (static_cast<CGVariable*>(st.lookup(p->ident_)))->cgname;
+    llvm::Value *old = builder.CreateLoad(var, "tmpvar");
+    llvm::Value *newer = builder.CreateAdd(old, llvm::ConstantInt::get(llvm::APInt(32, 1)), "tmpvar");
+    builder.CreateStore(newer, var);
+    return old;
 }
 
 llvm::Value* Generator::visitDecExpr(DecExpr *p) {
@@ -373,118 +395,180 @@ llvm::Value* Generator::visitMinusExpr(MinusExpr *p) {
     return builder.CreateNeg(e1, "negtmp");
 }
 
+llvm::Value* Generator::visitWhileLoop(WhileLoop *p) {
+    llvm::Function *f = builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock *cond = llvm::BasicBlock::Create("cond");
+    llvm::BasicBlock *whileB = llvm::BasicBlock::Create("while", f);
+    llvm::BasicBlock *merge = llvm::BasicBlock::Create("merge");
+
+    builder.CreateBr(cond);
+    builder.SetInsertPoint(cond);
+    llvm::Value *e = p->expr_->genCode(this);
+
+    builder.CreateCondBr(e, whileB, merge);
+
+    builder.SetInsertPoint(whileB);
+    pathFinishes.push(false);
+
+    p->instr_->genCode(this);
+
+    if(!pathFinishes.top())
+        builder.CreateBr(cond);
+    pathFinishes.pop();
+
+    f->getBasicBlockList().push_back(cond);
+    f->getBasicBlockList().push_back(merge);
+    builder.SetInsertPoint(merge);
+
+    return NULL;
+}
+
+llvm::Value* Generator::visitForLoop(ForLoop *p) {
+    llvm::Function *f = builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock *cond = llvm::BasicBlock::Create("cond");
+    llvm::BasicBlock *forB = llvm::BasicBlock::Create("for", f);
+    llvm::BasicBlock *merge = llvm::BasicBlock::Create("merge");
+
+    if(!p->listexpr_1->empty())
+        p->listexpr_1->at(0)->genCode(this);
+
+    builder.CreateBr(cond);
+    builder.SetInsertPoint(cond);
+    if(!p->listexpr_2->empty()) {
+        llvm::Value *e = p->listexpr_2->at(0)->genCode(this);
+        builder.CreateCondBr(e, forB, merge);
+    } else {
+        builder.CreateBr(forB);
+    }
+
+    builder.SetInsertPoint(forB);
+    pathFinishes.push(false);
+
+    p->instr_->genCode(this);
+
+    if(!p->listexpr_3->empty())
+        p->listexpr_3->at(0)->genCode(this);
+
+    if(!pathFinishes.top())
+        builder.CreateBr(cond);
+    pathFinishes.pop();
+
+    f->getBasicBlockList().push_back(cond);
+    f->getBasicBlockList().push_back(merge);
+    builder.SetInsertPoint(merge);
+
+    return NULL;
+}
+
+llvm::Value* Generator::visitIdentAssigment(IdentAssigment *p) {
+    llvm::Value *e = p->expr_->genCode(this);
+    llvm::AllocaInst *var = (static_cast<CGVariable*>(st.lookup(p->ident_)))->cgname;
+    builder.CreateStore(e, var);
+    return builder.CreateLoad(var, "tmpvar");
+}
+
+llvm::Value* Generator::visitIdentExpr(IdentExpr *p) {
+    llvm::AllocaInst *var = (static_cast<CGVariable*>(st.lookup(p->ident_)))->cgname;
+    return builder.CreateLoad(var, "tmpvar");
+}
+
+
+llvm::Value* Generator::visitInnerFunction(InnerFunction *p) {
+    std::cerr << "Not implemented yet InnerFunction"; return NULL;
+}
+
+llvm::Value* Generator::visitFunctionCall(FunctionCall *p) {
+    llvm::Function *f = static_cast<CGFunction*>(st.lookup(p->ident_))->cgreturn;
+    return p->listexpr_->genCode(this, f);
+}
+
+llvm::Value* Generator::visitListExpr(ListExpr *p, llvm::Function *callee) {
+    std::vector<llvm::Value*> args;
+    for(ListExpr::iterator i = p->begin(); i != p->end(); ++i) {
+        args.push_back((*i)->genCode(this));
+    }
+    return builder.CreateCall(callee, args.begin(), args.end());
+}
 
 
 Generator::~Generator() {
+    assert(!pathFinishes.size());
     delete module;
 }
 
-llvm::Value* Generator::visitIdentAssigment(IdentAssigment *p){
-    std::cout << "Not implemented yet IdentAssigment"; return NULL;
-}
+/*
+ * NOTING MORE INTERESTING
+ */
 
+llvm::Value* Generator::visitListArg(ListArg *p){
+    std::cerr << "Not implemented yet ListArg"; return NULL;
+}
 llvm::Value* Generator::visitProg(Prog *p){
-    std::cout << "Not implemented yet Prog"; return NULL;
+    std::cerr << "Not implemented yet Prog"; return NULL;
 }
 llvm::Value* Generator::visitFunDef(FunDef *p){
-    std::cout << "Not implemented yet FunDef"; return NULL;
+    std::cerr << "Not implemented yet FunDef"; return NULL;
 }
 llvm::Value* Generator::visitType(Type *p){
-    std::cout << "Not implemented yet Type"; return NULL;
+    std::cerr << "Not implemented yet Type"; return NULL;
 }
 llvm::Value* Generator::visitArg(Arg *p){
-    std::cout << "Not implemented yet Arg"; return NULL;
+    std::cerr << "Not implemented yet Arg"; return NULL;
 }
 llvm::Value* Generator::visitInstr(Instr *p){
-    std::cout << "Not implemented yet Instr"; return NULL;
+    std::cerr << "Not implemented yet Instr"; return NULL;
 }
 llvm::Value* Generator::visitDecl(Decl *p){
-    std::cout << "Not implemented yet Decl"; return NULL;
+    std::cerr << "Not implemented yet Decl"; return NULL;
 }
 llvm::Value* Generator::visitExpr(Expr *p){
-    std::cout << "Not implemented yet Expr"; return NULL;
+    std::cerr << "Not implemented yet Expr"; return NULL;
 }
 llvm::Value* Generator::visitLiteral(Literal *p){
-    std::cout << "Not implemented yet Literal"; return NULL;
+    std::cerr << "Not implemented yet Literal"; return NULL;
 }
 llvm::Value* Generator::visitIntType(IntType *p){
-    std::cout << "Not implemented yet IntType"; return NULL;
+    std::cerr << "Not implemented yet IntType"; return NULL;
 }
 llvm::Value* Generator::visitDoubleType(DoubleType *p){
-    std::cout << "Not implemented yet DoubleType"; return NULL;
+    std::cerr << "Not implemented yet DoubleType"; return NULL;
 }
 llvm::Value* Generator::visitVoidType(VoidType *p){
-    std::cout << "Not implemented yet VoidType"; return NULL;
+    std::cerr << "Not implemented yet VoidType"; return NULL;
 }
 llvm::Value* Generator::visitBoolType(BoolType *p){
-    std::cout << "Not implemented yet BoolType"; return NULL;
+    std::cerr << "Not implemented yet BoolType"; return NULL;
 }
 llvm::Value* Generator::visitFunctionArg(FunctionArg *p){
-    std::cout << "Not implemented yet FunctionArg"; return NULL;
-}
-
-llvm::Value* Generator::visitInnerFunction(InnerFunction *p){
-    std::cout << "Not implemented yet InnerFunction"; return NULL;
-}
-
-
-llvm::Value* Generator::visitForLoop(ForLoop *p){
-    std::cout << "Not implemented yet ForLoop"; return NULL;
-}
-llvm::Value* Generator::visitWhileLoop(WhileLoop *p){
-    std::cout << "Not implemented yet WhileLoop"; return NULL;
+    std::cerr << "Not implemented yet FunctionArg"; return NULL;
 }
 llvm::Value* Generator::visitArrayDeclarator(const llvm::Type*, ArrayDeclarator *p){
-    std::cout << "Not implemented yet ArrayDeclarator\n"; return NULL;
+    std::cerr << "Not implemented yet ArrayDeclarator\n"; return NULL;
 }
 llvm::Value* Generator::visitArrayAssigment(ArrayAssigment *p){
-    std::cout << "Not implemented yet ArrayAssigment"; return NULL;
-}
-llvm::Value* Generator::visitPostDecrement(PostDecrement *p){
-    std::cout << "Not implemented yet PostDecrement"; return NULL;
-}
-llvm::Value* Generator::visitPostIncrement(PostIncrement *p){
-    std::cout << "Not implemented yet PostIncrement"; return NULL;
-}
-llvm::Value* Generator::visitCast(Cast *p){
-    std::cout << "Not implemented yet Cast"; return NULL;
-}
-llvm::Value* Generator::visitFunctionCall(FunctionCall *p){
-    std::cout << "Not implemented yet FunctionCall"; return NULL;
+    std::cerr << "Not implemented yet ArrayAssigment"; return NULL;
 }
 llvm::Value* Generator::visitArrayAccess(ArrayAccess *p){
-    std::cout << "Not implemented yet ArrayAccess"; return NULL;
+    std::cerr << "Not implemented yet ArrayAccess"; return NULL;
 }
-llvm::Value* Generator::visitIdentExpr(IdentExpr *p){
-    std::cout << "Not implemented yet IdentExpr"; return NULL;
+llvm::Value* Generator::visitCast(Cast *p){
+    std::cerr << "Not implemented yet Cast"; return NULL;
 }
-llvm::Value* Generator::visitListArg(ListArg *p){
-    std::cout << "Not implemented yet ListArg"; return NULL;
-}
-
-llvm::Value* Generator::visitListExpr(ListExpr *p){
-    std::cout << "Not implemented yet ListExpr"; return NULL;
-}
-
-
 llvm::Value* Generator::visitInteger(Integer x){
-    std::cout << "Not implemented yet Integer"; return NULL;
+    std::cerr << "Not implemented yet Integer"; return NULL;
 }
 llvm::Value* Generator::visitChar(Char x){
-    std::cout << "Not implemented yet Char"; return NULL;
+    std::cerr << "Not implemented yet Char"; return NULL;
 }
 llvm::Value* Generator::visitDouble(Double x){
-    std::cout << "Not implemented yet Double"; return NULL;
+    std::cerr << "Not implemented yet Double"; return NULL;
 }
 llvm::Value* Generator::visitString(String x){
-    std::cout << "Not implemented yet String"; return NULL;
+    std::cerr << "Not implemented yet String"; return NULL;
 }
 llvm::Value* Generator::visitIdent(Ident x){
-    std::cout << "Not implemented yet Ident"; return NULL;
+    std::cerr << "Not implemented yet Ident"; return NULL;
 }
 llvm::Value* Generator::visitBoolean(Boolean x){
-    std::cout << "Not implemented yet Boolean"; return NULL;
+    std::cerr << "Not implemented yet Boolean"; return NULL;
 }
-
-
-

@@ -1,4 +1,14 @@
+
+
+int lala(int x) {
+	if(x > 0) return lala(x-1);
+	else return 10;
+}
+
 int main() {
-	boolean a = true;
-	return 3;
+	int i = 3;
+	for(i = 4; i < lala(4); i++) {
+		int a = 3;
+	}
+	return i;
 }

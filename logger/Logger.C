@@ -81,6 +81,11 @@ void Logger::pathWithoutReturn(Function *f) {
     fatal = true;
 }
 
+void Logger::tooManyExpressions(ForLoop *forloop) {
+    std::cerr << ":" << forloop->line_number << ": for can't have comma separated arguments\n";
+    fatal = true;
+}
+
 Logger::Logger() {
     fatal = false;
 }

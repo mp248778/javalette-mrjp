@@ -24,6 +24,7 @@ public:
     void uninitializedValue(const std::string&, int);
     void unreachable(const Instr *i);
     void pathWithoutReturn(Function *);
+    void tooManyExpressions(ForLoop *);
 };
 
 #endif
