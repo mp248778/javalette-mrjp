@@ -7,8 +7,8 @@
 	<File name="../Test.C" open="0" top="0" tabpos="6">
 		<Cursor position="1630" topLine="2" />
 	</File>
-	<File name="../analyzer/DeclarationVisitor.C" open="0" top="0" tabpos="3">
-		<Cursor position="1353" topLine="13" />
+	<File name="../analyzer/DeclarationVisitor.C" open="1" top="0" tabpos="3">
+		<Cursor position="2484" topLine="46" />
 	</File>
 	<File name="../analyzer/ExpressionVisitor.C" open="0" top="0" tabpos="6">
 		<Cursor position="9812" topLine="290" />
@@ -55,8 +55,8 @@
 	<File name="../include/JType.H" open="0" top="0" tabpos="7">
 		<Cursor position="62" topLine="0" />
 	</File>
-	<File name="../include/Logger.H" open="0" top="0" tabpos="4">
-		<Cursor position="21" topLine="0" />
+	<File name="../include/Logger.H" open="1" top="0" tabpos="5">
+		<Cursor position="419" topLine="0" />
 	</File>
 	<File name="../include/Parser.H" open="0" top="0" tabpos="1">
 		<Cursor position="682" topLine="22" />
@@ -67,14 +67,14 @@
 	<File name="../include/Symbol.H" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="13" />
 	</File>
-	<File name="../include/SymbolTable.H" open="1" top="1" tabpos="2">
+	<File name="../include/SymbolTable.H" open="1" top="0" tabpos="2">
 		<Cursor position="122" topLine="0" />
 	</File>
 	<File name="../lexer/Lexer.C" open="0" top="0" tabpos="5">
 		<Cursor position="41420" topLine="1563" />
 	</File>
-	<File name="../logger/Logger.C" open="0" top="0" tabpos="3">
-		<Cursor position="738" topLine="0" />
+	<File name="../logger/Logger.C" open="1" top="1" tabpos="4">
+		<Cursor position="1075" topLine="10" />
 	</File>
 	<File name="../parser/Absyn.C" open="0" top="0" tabpos="5">
 		<Cursor position="40469" topLine="2532" />

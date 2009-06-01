@@ -1,0 +1,4 @@
+int main() {
+	boolean a = true;
+	return 3;
+}

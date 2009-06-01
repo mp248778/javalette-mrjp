@@ -80,31 +80,32 @@ llvm::Value* Generator::visitCompoundInstr(CompoundInstr *p) {
     return NULL;
 }
 
-llvm::Value* Generator::visitListInstr(ListInstr *p){
+llvm::Value* Generator::visitListInstr(ListInstr *p) {
     for(ListInstr::iterator i = p->begin(); i != p->end(); ++i)
         (*i)->genCode(this);
     return NULL;
 }
 
-llvm::Value* Generator::visitListDecl(const llvm::Type *type, ListDecl *p){
+llvm::Value* Generator::visitListDecl(const llvm::Type *type, ListDecl *p) {
     for(ListDecl::iterator i = p->begin(); i != p->end(); ++i)
         (*i)->genCodeWithType(type, this);
     return NULL;
 }
 
-llvm::Value* Generator::visitDeclInstr(DeclInstr *p){
+llvm::Value* Generator::visitDeclInstr(DeclInstr *p) {
     const llvm::Type *type = p->type_->getLLVMType();
     p->listdecl_->genCodeWithType(type, this);
     return NULL;
 }
 
-llvm::Value* Generator::visitOnlyDeclarator(const llvm::Type *type, OnlyDeclarator *p){
+llvm::Value* Generator::visitOnlyDeclarator(const llvm::Type *type, OnlyDeclarator *p) {
     llvm::AllocaInst *var = builder.CreateAlloca(type, 0, p->ident_.c_str());
     st.add(p->ident_, new CGVariable(p->ident_, var, currentDepth, variableCnt.top()));
     variableCnt.top()++;
     return NULL;
 }
-llvm::Value* Generator::visitInitDeclarator(const llvm::Type *type, InitDeclarator *p){
+
+llvm::Value* Generator::visitInitDeclarator(const llvm::Type *type, InitDeclarator *p) {
     llvm::Value *val = p->expr_->genCode(this);
     llvm::AllocaInst *var = builder.CreateAlloca(type, 0, p->ident_.c_str());
     builder.CreateStore(val, var);
@@ -193,15 +194,6 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
     return NULL;
 }
 
-llvm::Value* Generator::visitLiteralBoolean(LiteralBoolean *p){
-    llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::Int1Ty, 0, "tmpvar");
-    if(p->boolean_ == "true")
-            builder.CreateStore(llvm::ConstantInt::getTrue(), var);
-    else
-            builder.CreateStore(llvm::ConstantInt::getFalse(), var);
-    return var;
-}
-
 llvm::Value* Generator::visitExpressionInstr(ExpressionInstr *p) {
     p->expr_->genCode(this);
     return NULL;
@@ -214,22 +206,172 @@ llvm::Value* Generator::visitLiteralExpr(LiteralExpr *p) {
 llvm::Value* Generator::visitLiteralInteger(LiteralInteger *p) {
     llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::Int32Ty, 0, "tmpvar");
     builder.CreateStore(llvm::ConstantInt::get(llvm::APInt(32, p->integer_)), var);
-    return var;
+    return builder.CreateLoad(var, "tmpvar");
 }
+
+llvm::Value* Generator::visitLiteralBoolean(LiteralBoolean *p) {
+    llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::Int1Ty, 0, "tmpvar");
+    if(p->boolean_ == "true")
+            builder.CreateStore(llvm::ConstantInt::getTrue(), var);
+    else
+            builder.CreateStore(llvm::ConstantInt::getFalse(), var);
+    return builder.CreateLoad(var, "tmpvar");
+}
+
 llvm::Value* Generator::visitLiteralDouble(LiteralDouble *p) {
     llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::DoubleTy, 0, "tmpvar");
     builder.CreateStore(llvm::ConstantFP::get(llvm::APFloat(p->double_)), var);
-    return var;
+    return builder.CreateLoad(var, "tmpvar");
 }
+
 llvm::Value* Generator::visitLiteralString(LiteralString *p) {
     llvm::AllocaInst *var = builder.CreateAlloca(llvm::PointerType::get(llvm::Type::Int8Ty, 0), 0, "tmpvar");
     builder.CreateStore(builder.CreateGlobalStringPtr(p->string_.c_str()), var);
-    return var;
+    return builder.CreateLoad(var, "tmpvar");
 }
 
+llvm::Value* Generator::visitLogExprOr(LogExprOr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::Int1Ty, 0, "ortmpvar");
+    builder.CreateStore(e1, var);
 
+    llvm::Function *f = builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock *orelse = llvm::BasicBlock::Create("orelse", f);
+    llvm::BasicBlock *merge = llvm::BasicBlock::Create("merge");
+    builder.CreateCondBr(e1, merge, orelse);
 
+    builder.SetInsertPoint(orelse);
+    llvm::Value *e2 = p->expr_2->genCode(this);
+    builder.CreateStore(e2, var);
+    builder.CreateBr(merge);
 
+    f->getBasicBlockList().push_back(merge);
+    f->SetInsertPoint(merge);
+
+    return builder.CreateLoad(var);
+}
+
+llvm::Value* Generator::visitLogExprAnd(LogExprAnd *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::AllocaInst *var = builder.CreateAlloca(llvm::Type::Int1Ty, 0, "andtmpvar");
+    builder.CreateStore(e1, var);
+
+    llvm::Function *f = builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock *andalso = llvm::BasicBlock::Create("andalso", f);
+    llvm::BasicBlock *merge = llvm::BasicBlock::Create("merge");
+    builder.CreateCondBr(e1, andalso, merge);
+
+    builder.SetInsertPoint(andalso);
+    llvm::Value *e2 = p->expr_2->genCode(this);
+    builder.CreateStore(e2, var);
+    builder.CreateBr(merge);
+
+    f->getBasicBlockList().push_back(merge);
+    f->SetInsertPoint(merge);
+
+    return builder.CreateLoad(var);
+}
+
+llvm::Value* Generator::visitLogExprEq(LogExprEq *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
+    if(e1->expr_1->isInt())
+        return builder.CreateICmpEQ(e1, e2, "ieqcmp");
+    else
+        return builder.CreateFCmpOEQ(e1, e2, "feqcmp");
+}
+
+llvm::Value* Generator::visitLogExprNeq(LogExprNeq *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
+    if(e1->expr_1->isInt())
+        return builder.CreateICmpNE(e1, e2, "ineqcmp");
+    else
+        return builder.CreateFCmpONE(e1, e2, "feqcmp");
+}
+
+llvm::Value* Generator::visitRelExprL(RelExprL *p) {
+    Value *e1 = p->expr_1->genCode(this);
+    Value *e2 = p->expr_2->genCode(this);
+    if(p->expr_1->jtype_->isInt())
+        return builder.CreateICmpSLT(e1, e2, "igetmp");
+    else
+        return builder.CreateFCmpOLT(e1, e2, "fgetmp");
+}
+
+llvm::Value* Generator::visitRelExprG(RelExprG *p) {
+    Value *e1 = p->expr_1->genCode(this);
+    Value *e2 = p->expr_2->genCode(this);
+    if(p->expr_1->jtype_->isInt())
+        return builder.CreateICmpSGT(e1, e2, "igetmp");
+    else
+        return builder.CreateFCmpOGT(e1, e2, "fgetmp");
+}
+
+llvm::Value* Generator::visitRelExprLe(RelExprLe *p) {
+    Value *e1 = p->expr_1->genCode(this);
+    Value *e2 = p->expr_2->genCode(this);
+    if(p->expr_1->jtype_->isInt())
+        return builder.CreateICmpSLE(e1, e2, "igetmp");
+    else
+        return builder.CreateFCmpOLE(e1, e2, "fgetmp");
+}
+
+llvm::Value* Generator::visitRelExprGe(RelExprGe *p) {
+    Value *e1 = p->expr_1->genCode(this);
+    Value *e2 = p->expr_2->genCode(this);
+    if(p->expr_1->jtype_->isInt())
+        return builder.CreateICmpSGE(e1, e2, "igetmp");
+    else
+        return builder.CreateFCmpOGE(e1, e2, "fgetmp");
+}
+
+llvm::Value* Generator::visitNegExpr(NegExpr *p) {
+    llvm::Value *e = p->expr_->genCode(this);
+    return builder.CreateNot(e, "negtmp");
+}
+
+llvm::Value* Generator::visitAddExpr(AddExpr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
+    return builder.CreateAdd(e1, e2, "addtmp");
+}
+
+llvm::Value* Generator::visitDecExpr(DecExpr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_1->genCode(this);
+    return builder.CreateSub(e1, e2, "subtmp");
+}
+
+llvm::Value* Generator::visitMulExpr(MulExpr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_1->genCode(this);
+    return builder.CreateMul(e1, e2, "multmp");
+}
+
+llvm::Value* Generator::visitDivExpr(DivExpr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_1->genCode(this);
+    if(p->expr_1->jtype_->isInt())
+        return builder.CreateSDiv(e1, e2, "idivtmp");
+    else
+        return builder.CreateFDiv(e1, e2, "fdivtmp");
+}
+
+llvm::Value* Generator::visitModExpr(ModExpr *p) {
+    llvm::Value *e1 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_1->genCode(this);
+    return builder.CreateURem(e1, e2, "modtmp");
+}
+
+llvm::Value* Generator::visitPlusExpr(PlusExpr *p) {
+    return p->expr_->genCode(this);
+}
+
+llvm::Value* Generator::visitMinusExpr(MinusExpr *p) {
+    llvm::Value *e1 = p->expr_->genCode(this);
+    return builder.CreateNeg(e1, "negtmp");
+}
 
 
 
@@ -306,54 +448,6 @@ llvm::Value* Generator::visitPostIncrement(PostIncrement *p){
 }
 llvm::Value* Generator::visitCast(Cast *p){
     std::cout << "Not implemented yet Cast"; return NULL;
-}
-llvm::Value* Generator::visitLogExprOr(LogExprOr *p){
-    std::cout << "Not implemented yet LogExprOr"; return NULL;
-}
-llvm::Value* Generator::visitLogExprAnd(LogExprAnd *p){
-    std::cout << "Not implemented yet LogExprAnd"; return NULL;
-}
-llvm::Value* Generator::visitLogExprEq(LogExprEq *p){
-    std::cout << "Not implemented yet LogExprEq"; return NULL;
-}
-llvm::Value* Generator::visitLogExprNeq(LogExprNeq *p){
-    std::cout << "Not implemented yet LogExprNeq"; return NULL;
-}
-llvm::Value* Generator::visitRelExprL(RelExprL *p){
-    std::cout << "Not implemented yet RelExprL"; return NULL;
-}
-llvm::Value* Generator::visitRelExprG(RelExprG *p){
-    std::cout << "Not implemented yet RelExprG"; return NULL;
-}
-llvm::Value* Generator::visitRelExprLe(RelExprLe *p){
-    std::cout << "Not implemented yet RelExprLe"; return NULL;
-}
-llvm::Value* Generator::visitRelExprGe(RelExprGe *p){
-    std::cout << "Not implemented yet RelExprGe"; return NULL;
-}
-llvm::Value* Generator::visitAddExpr(AddExpr *p){
-    std::cout << "Not implemented yet AddExpr"; return NULL;
-}
-llvm::Value* Generator::visitDecExpr(DecExpr *p){
-    std::cout << "Not implemented yet DecExpr"; return NULL;
-}
-llvm::Value* Generator::visitMulExpr(MulExpr *p){
-    std::cout << "Not implemented yet MulExpr"; return NULL;
-}
-llvm::Value* Generator::visitDivExpr(DivExpr *p){
-    std::cout << "Not implemented yet DivExpr"; return NULL;
-}
-llvm::Value* Generator::visitModExpr(ModExpr *p){
-    std::cout << "Not implemented yet ModExpr"; return NULL;
-}
-llvm::Value* Generator::visitNegExpr(NegExpr *p){
-    std::cout << "Not implemented yet NegExpr"; return NULL;
-}
-llvm::Value* Generator::visitPlusExpr(PlusExpr *p){
-    std::cout << "Not implemented yet PlusExpr"; return NULL;
-}
-llvm::Value* Generator::visitMinusExpr(MinusExpr *p){
-    std::cout << "Not implemented yet MinusExpr"; return NULL;
 }
 llvm::Value* Generator::visitFunctionCall(FunctionCall *p){
     std::cout << "Not implemented yet FunctionCall"; return NULL;

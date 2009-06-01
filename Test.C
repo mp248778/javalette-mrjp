@@ -26,7 +26,7 @@ int main(int argc, char ** argv) {
     } else input = stdin;
     /* The default entry point is used. For other options see Parser.H */
     Prog *parse_tree = pProg(input);
-    printf("Parsing finished\n");
+//  printf("Parsing finished\n");
     if (parse_tree) {
         SymbolTable<std::string, JSymbol> st;
         Logger logger;
@@ -34,13 +34,13 @@ int main(int argc, char ** argv) {
         InstructionVisitor iv(st, logger);
         parse_tree->accept(&iv);
         if (logger.anyFatalErrors()) return 1;
-        printf("\nParse Succesful!\n");
-        printf("\n[Abstract Syntax]\n");
-        ShowAbsyn *s = new ShowAbsyn();
-        printf("%s\n\n", s->show(parse_tree));
-        printf("[Linearized Tree]\n");
-        PrintAbsyn *p = new PrintAbsyn();
-        printf("%s\n\n", p->print(parse_tree));
+//      printf("\nParse Succesful!\n");
+//      printf("\n[Abstract Syntax]\n");
+//      ShowAbsyn *s = new ShowAbsyn();
+//      printf("%s\n\n", s->show(parse_tree));
+//      printf("[Linearized Tree]\n");
+//      PrintAbsyn *p = new PrintAbsyn();
+//      printf("%s\n\n", p->print(parse_tree));
         Generator gen;
         parse_tree->genCode(&gen);
         return 0;
