@@ -5,4 +5,5 @@ int main() {
  for (;i >= 0; i--) {
    printInt(i);
  }
+ return 0;
 }

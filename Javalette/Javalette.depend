@@ -12,7 +12,7 @@
 	<string.h>
 	<stdlib.h>
 
-1243853149 /home/frea/mrjp/include/Absyn.H
+1243958786 /home/frea/mrjp/include/Absyn.H
 	<string>
 	<vector>
 	"llvm/DerivedTypes.h"
@@ -55,7 +55,7 @@
 	<stdlib.h>
 	<stdio.h>
 
-1243844059 source:/home/frea/mrjp/Test.C
+1243949991 source:/home/frea/mrjp/Test.C
 	<stdio.h>
 	"Parser.H"
 	"Printer.H"
@@ -117,11 +117,13 @@
 	"Logger.H"
 	"Symbol.H"
 
-1243846254 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
+1243950499 source:/home/frea/mrjp/analyzer/InstructionVisitor.C
 	"InstructionVisitor.H"
 	"FunctionVisitor.H"
 	"ExpressionVisitor.H"
 	"DeclarationVisitor.H"
+	"Stdfunc.H"
+	"ObfuseNames.H"
 
 1241091234 /home/frea/mrjp//include/InstructionVisitor.H
 	"include/Absyn.H"
@@ -135,7 +137,7 @@
 	"include/Logger.H"
 	"include/Symbol.H"
 
-1243846557 source:/home/frea/mrjp/logger/Logger.C
+1243959985 source:/home/frea/mrjp/logger/Logger.C
 	<iostream>
 	"Logger.H"
 	"JType.H"
@@ -164,7 +166,7 @@
 	"Absyn.H"
 	"JType.H"
 
-1243846200 /home/frea/mrjp/include/Logger.H
+1243959333 /home/frea/mrjp/include/Logger.H
 	"Symbol.H"
 
 1243140150 /home/frea/mrjp/include/InstructionVisitor.H
@@ -177,7 +179,7 @@
 	<vector>
 	<string>
 
-1243140150 source:/home/frea/mrjp/analyzer/Stdfunc.C
+1243948199 source:/home/frea/mrjp/analyzer/Stdfunc.C
 	"Stdfunc.H"
 
 1241102222 /home/frea/mrjp//include/Stdfunc.H
@@ -204,14 +206,14 @@
 	"Logger.H"
 	"Symbol.H"
 
-1243152140 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
+1243961013 source:/home/frea/mrjp/analyzer/ExpressionVisitor.C
 	"ExpressionVisitor.H"
 
 1243140150 source:/home/frea/mrjp/symbol/JSymbol.C
 	"Symbol.H"
 	"ObfuseNames.H"
 
-1243843141 source:/home/frea/mrjp/analyzer/ObfuseNames.C
+1243949694 source:/home/frea/mrjp/analyzer/ObfuseNames.C
 	<sstream>
 	<iostream>
 	"ObfuseNames.H"
@@ -224,9 +226,10 @@
 
 1241699708 source:/home/frea/mrjp/codegen/InstructionCodeGenerator.C
 
-1243853205 source:/home/frea/mrjp/codegen/Codegen.C
+1243960650 source:/home/frea/mrjp/codegen/Codegen.C
 	"Codegen.H"
 	"SymbolTable.H"
+	"ObfuseNames.H"
 
 1243852661 /home/frea/mrjp/include/Codegen.H
 	"Absyn.H"

@@ -6,7 +6,7 @@ int main() {
 
   printInt(x-5);
   
-  if (y > 42.0 || y < 43.0) 
+  if (y > 42.0 && y < 43.0) 
     printString("yay!");
   else
     printString("nay!");

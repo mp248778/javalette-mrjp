@@ -31,8 +31,6 @@ int main(int argc, char ** argv) {
     if (parse_tree) {
         SymbolTable<std::string, JSymbol> st;
         Logger logger;
-        populateSymbolTable(st);
-	ObfuseNames::toggle();
         InstructionVisitor iv(st, logger);
         parse_tree->accept(&iv);
         if (logger.anyFatalErrors()) return 1;

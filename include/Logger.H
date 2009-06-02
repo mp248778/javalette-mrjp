@@ -25,6 +25,7 @@ public:
     void unreachable(const Instr *i);
     void pathWithoutReturn(Function *);
     void tooManyExpressions(ForLoop *);
+    void castToVoid(Cast *cast);
 };
 
 #endif

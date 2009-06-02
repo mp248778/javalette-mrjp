@@ -9,6 +9,7 @@ bool ObfuseNames::turnedOn = false;
 ObfuseNames::ObfuseNames() {}
 
 std::string ObfuseNames::obfuscate(const std::string &name) {
+    if(!turnedOn) return name;
     std::ostringstream obf;
     obf << name << (symbolsCnt++);
     return obf.str();

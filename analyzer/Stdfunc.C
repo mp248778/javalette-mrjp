@@ -16,6 +16,4 @@ void populateSymbolTable(SymbolTable<std::string, JSymbol> &st) {
     st.add("readInt", new JFunction("readInt", new JInt(), listarg));
     listarg.clear();
     st.add("readDouble", new JFunction("readDouble", new JDouble(), listarg));
-    listarg.clear();
-    st.add("readString", new JFunction("readString", new JString(), listarg));
 }

@@ -1,5 +1,6 @@
 #include "Codegen.H"
 #include "SymbolTable.H"
+#include "ObfuseNames.H"
 
 Generator::Generator() {
     currentDepth = 0;
@@ -7,6 +8,43 @@ Generator::Generator() {
 }
 
 llvm::Value* Generator::visitProgram(Program *p) {
+    ObfuseNames::toggle();
+
+    llvm::FunctionType *fextern;
+    llvm::Function *f;
+    std::string name = "printInt";
+
+    std::vector<const llvm::Type*> argPrintInt(1, llvm::Type::Int32Ty);
+    fextern = llvm::FunctionType::get(llvm::Type::VoidTy, argPrintInt, false);
+    f = llvm::Function::Create(fextern, llvm::Function::ExternalLinkage, name, module); 
+    st.add(name, new CGFunction(name, f, 0));
+
+    name = "printDouble";
+    std::vector<const llvm::Type*> argPrintDouble(1, llvm::Type::DoubleTy);
+    fextern = llvm::FunctionType::get(llvm::Type::VoidTy, argPrintDouble, false);
+    f = llvm::Function::Create(fextern, llvm::Function::ExternalLinkage, name, module);
+    st.add(name, new CGFunction(name, f, 0));
+
+    name = "printString";
+    std::vector<const llvm::Type*> argPrintString(1, llvm::PointerType::getUnqual(llvm::Type::Int8Ty));
+    fextern = llvm::FunctionType::get(llvm::Type::VoidTy, argPrintString, false);
+    f = llvm::Function::Create(fextern, llvm::Function::ExternalLinkage, name, module);
+    st.add(name, new CGFunction(name, f, 0));
+
+    name = "readInt";
+    fextern = llvm::FunctionType::get(llvm::Type::Int32Ty, std::vector<const llvm::Type*>(), false);
+    f = llvm::Function::Create(fextern, llvm::Function::ExternalLinkage, name, module);
+    st.add(name, new CGFunction(name, f, 0));
+
+    name = "readDouble";
+    fextern = llvm::FunctionType::get(llvm::Type::DoubleTy, std::vector<const llvm::Type*>(), false);
+    f = llvm::Function::Create(fextern, llvm::Function::ExternalLinkage, name, module);
+    st.add(name, new CGFunction(name, f, 0));
+
+    ObfuseNames::toggle();
+
+
+
     st.newScope();
     p->listfundef_->genCode(this);
     module->print(std::cout, 0);
@@ -168,6 +206,7 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
     builder.SetInsertPoint(true_body);
     pathFinishes.push(false);
     p->instr_1->genCode(this);
+    true_body = builder.GetInsertBlock();
     out1 = pathFinishes.top();
     pathFinishes.pop();
 
@@ -176,6 +215,7 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
     builder.SetInsertPoint(false_body);
     pathFinishes.push(false);
     p->instr_2->genCode(this);
+    false_body = builder.GetInsertBlock();
 
     out2 = pathFinishes.top();
     pathFinishes.pop();
@@ -190,7 +230,7 @@ llvm::Value* Generator::visitConditionalIfElse(ConditionalIfElse *p) {
         builder.SetInsertPoint(true_body);
         builder.CreateBr(after);
     }
-    else if(!out2) {
+    if(!out2) {
         builder.SetInsertPoint(false_body);
         builder.CreateBr(after);
     }
@@ -231,9 +271,7 @@ llvm::Value* Generator::visitLiteralDouble(LiteralDouble *p) {
 }
 
 llvm::Value* Generator::visitLiteralString(LiteralString *p) {
-    llvm::AllocaInst *var = builder.CreateAlloca(llvm::PointerType::get(llvm::Type::Int8Ty, 0), 0, "tmpvar");
-    builder.CreateStore(builder.CreateGlobalStringPtr(p->string_.c_str()), var);
-    return builder.CreateLoad(var, "tmpvar");
+    return builder.CreateGlobalStringPtr(p->string_.c_str());
 }
 
 llvm::Value* Generator::visitLogExprOr(LogExprOr *p) {
@@ -283,8 +321,9 @@ llvm::Value* Generator::visitLogExprEq(LogExprEq *p) {
     llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateICmpEQ(e1, e2, "ieqcmp");
-    else
+    else if(p->expr_1->jtype_->isDouble())
         return builder.CreateFCmpOEQ(e1, e2, "feqcmp");
+    else return builder.CreateICmpEQ(e1, e2, "beqcmp");
 }
 
 llvm::Value* Generator::visitLogExprNeq(LogExprNeq *p) {
@@ -361,19 +400,19 @@ llvm::Value* Generator::visitPostIncrement(PostIncrement *p) {
 
 llvm::Value* Generator::visitDecExpr(DecExpr *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
-    llvm::Value *e2 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     return builder.CreateSub(e1, e2, "subtmp");
 }
 
 llvm::Value* Generator::visitMulExpr(MulExpr *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
-    llvm::Value *e2 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     return builder.CreateMul(e1, e2, "multmp");
 }
 
 llvm::Value* Generator::visitDivExpr(DivExpr *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
-    llvm::Value *e2 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     if(p->expr_1->jtype_->isInt())
         return builder.CreateSDiv(e1, e2, "idivtmp");
     else
@@ -382,7 +421,7 @@ llvm::Value* Generator::visitDivExpr(DivExpr *p) {
 
 llvm::Value* Generator::visitModExpr(ModExpr *p) {
     llvm::Value *e1 = p->expr_1->genCode(this);
-    llvm::Value *e2 = p->expr_1->genCode(this);
+    llvm::Value *e2 = p->expr_2->genCode(this);
     return builder.CreateURem(e1, e2, "modtmp");
 }
 
@@ -490,6 +529,33 @@ llvm::Value* Generator::visitListExpr(ListExpr *p, llvm::Function *callee) {
     return builder.CreateCall(callee, args.begin(), args.end());
 }
 
+llvm::Value* Generator::visitCast(Cast *p) {
+    llvm::Value *e = p->expr_->genCode(this);
+    if(p->jtype_->isInt()) {
+        if(p->expr_->jtype_->isInt())
+            return e;
+        else if(p->expr_->jtype_->isDouble())
+            return builder.CreateFPToSI(e, llvm::Type::Int32Ty, "ftoicast");
+        else
+            return builder.CreateIntCast(e, llvm::Type::Int32Ty, "btoicast");
+    } else if(p->jtype_->isDouble()) {
+        if(p->expr_->jtype_->isInt())
+            return builder.CreateSIToFP(e, llvm::Type::DoubleTy, "itofcast");
+        else if(p->expr_->jtype_->isDouble())
+            return e;
+        else
+            return builder.CreateUIToFP(e, llvm::Type::Int1Ty, "btofcast");
+    } else if(p->jtype_->isBool()) {
+        if(p->expr_->jtype_->isInt())
+            return builder.CreateIntCast(e, llvm::Type::Int1Ty, true, "itofcast");
+        else if(p->expr_->jtype_->isDouble())
+            return builder.CreateFPToUI(e, llvm::Type::Int1Ty, "ftobcast");
+        else
+            return e;
+    }
+    return NULL;
+}
+
 
 Generator::~Generator() {
     assert(!pathFinishes.size());
@@ -550,9 +616,6 @@ llvm::Value* Generator::visitArrayAssigment(ArrayAssigment *p){
 }
 llvm::Value* Generator::visitArrayAccess(ArrayAccess *p){
     std::cerr << "Not implemented yet ArrayAccess"; return NULL;
-}
-llvm::Value* Generator::visitCast(Cast *p){
-    std::cerr << "Not implemented yet Cast"; return NULL;
 }
 llvm::Value* Generator::visitInteger(Integer x){
     std::cerr << "Not implemented yet Integer"; return NULL;

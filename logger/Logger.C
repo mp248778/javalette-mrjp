@@ -86,6 +86,11 @@ void Logger::tooManyExpressions(ForLoop *forloop) {
     fatal = true;
 }
 
+void Logger::castToVoid(Cast *cast) {
+    std::cerr << ":" << cast->line_number << ": cast to void\n";
+    fatal = true;
+}
+
 Logger::Logger() {
     fatal = false;
 }

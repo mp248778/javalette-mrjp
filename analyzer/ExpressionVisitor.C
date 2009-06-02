@@ -3,7 +3,7 @@
 ExpressionVisitor::ExpressionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
 ExpressionVisitor::~ExpressionVisitor() {
-    while(!types.empty()) delete _pop();
+    while(!types.empty()) _pop();
 }
 
 JType* ExpressionVisitor::_pop() {
@@ -142,6 +142,8 @@ void ExpressionVisitor::visitPostIncrement(PostIncrement *postincrement) {
 void ExpressionVisitor::visitCast(Cast *cast) {
     cast->expr_->accept(this);
     cast->jtype_ = cast->type_->getJType();
+    if(cast->jtype_->isVoid())
+        logger.castToVoid(cast);
     _pop();
     types.push(cast->jtype_);
 }

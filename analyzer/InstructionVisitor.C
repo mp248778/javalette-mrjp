@@ -2,6 +2,8 @@
 #include "FunctionVisitor.H"
 #include "ExpressionVisitor.H"
 #include "DeclarationVisitor.H"
+#include "Stdfunc.H"
+#include "ObfuseNames.H"
 
 InstructionVisitor::InstructionVisitor(SymbolTable<std::string, JSymbol> &st, Logger &logger) : st(st), logger(logger) {}
 
@@ -34,6 +36,8 @@ void InstructionVisitor::visitListInstr(ListInstr* listinstr) {
 }
 
 void InstructionVisitor::visitProgram(Program *program) {
+    populateSymbolTable(st);
+    ObfuseNames::toggle();
     st.newScope();
     program->listfundef_->accept(this);
     st.delScope();
